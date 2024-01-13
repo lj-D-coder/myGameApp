@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_instance/get_instance.dart';
 import 'package:get/route_manager.dart';
+import 'package:mygame/core/auth/signup_controller.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -13,10 +15,13 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    final SignUpController _signUpController = Get.put(SignUpController());
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController phoneController = TextEditingController();
     return Scaffold(
       backgroundColor: Colors.black12,
       body: Container(
-          padding: const EdgeInsets.only(left:20,right:20,top: 20),
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           alignment: Alignment.topCenter,
@@ -46,11 +51,15 @@ class _SignUpState extends State<SignUp> {
                     // width: 250,
                   ),
                 ),
-                const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
                 Form(
                     key: _signUpKey,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0,),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0,
+                      ),
                       child: Column(
                         children: [
                           Text(
@@ -64,6 +73,7 @@ class _SignUpState extends State<SignUp> {
                             height: 20,
                           ),
                           TextFormField(
+                            controller: nameController,
                             cursorColor: Colors.white,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -72,32 +82,33 @@ class _SignUpState extends State<SignUp> {
                               return null;
                             },
                             decoration: const InputDecoration(
-                              isDense: true,
-                              enabled: true,
-                              errorStyle: TextStyle(color: Colors.white),
-                              errorBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 2),
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 2),
-                              ),
-                              border: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 2),
-                              ),
-                              focusColor: Colors.white,
-                              labelText: "Name",
-                              labelStyle:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 2),
-                              ),
-                              suffixIcon: Icon(Icons.person,color: Colors.white,)
-                            ),
-                            
+                                isDense: true,
+                                enabled: true,
+                                errorStyle: TextStyle(color: Colors.white),
+                                errorBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.white, width: 2),
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.white, width: 2),
+                                ),
+                                border: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.white, width: 2),
+                                ),
+                                focusColor: Colors.white,
+                                labelText: "Name",
+                                labelStyle: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.white, width: 2),
+                                ),
+                                suffixIcon: Icon(
+                                  Icons.person,
+                                  color: Colors.white,
+                                )),
                             onEditingComplete: () {
                               FocusScope.of(context).nextFocus();
                             },
@@ -106,6 +117,7 @@ class _SignUpState extends State<SignUp> {
                             height: 20,
                           ),
                           TextFormField(
+                            controller: phoneController,
                             cursorColor: Colors.white,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -117,74 +129,36 @@ class _SignUpState extends State<SignUp> {
                             // obscureText: true,
                             // obscuringCharacter: "*",
                             decoration: const InputDecoration(
-                               errorBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 2),
-                              ),
-                              isDense: true,
-                              enabled: true,
-                              errorStyle: TextStyle(color: Colors.white),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 2),
-                              ),
-                              border: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 2),
-                              ),
-                              focusColor: Colors.white,
-                              labelText: "Phone Number",
-                              labelStyle:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 2),
-                              ),
-                              suffixIcon: Icon(Icons.call,color: Colors.white,)
-                            ),
+                                errorBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.white, width: 2),
+                                ),
+                                isDense: true,
+                                enabled: true,
+                                errorStyle: TextStyle(color: Colors.white),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.white, width: 2),
+                                ),
+                                border: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.white, width: 2),
+                                ),
+                                focusColor: Colors.white,
+                                labelText: "Phone Number",
+                                labelStyle: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.white, width: 2),
+                                ),
+                                suffixIcon: Icon(
+                                  Icons.call,
+                                  color: Colors.white,
+                                )),
                             onEditingComplete: () {
                               FocusScope.of(context).nextFocus();
                             },
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          TextFormField(
-                            cursorColor: Colors.white,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Password is required';
-                              }
-                              return null;
-                            },
-                            // obscureText: true,
-                            // obscuringCharacter: "*",
-                            decoration: const InputDecoration(
-                               errorBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 2),
-                              ),
-                              isDense: true,
-                              enabled: true,
-                              errorStyle: TextStyle(color: Colors.white),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 2),
-                              ),
-                              border: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 2),
-                              ),
-                              focusColor: Colors.white,
-                              labelText: "Password",
-                              labelStyle:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 2),
-                              ),
-                              suffixIcon: Icon(Icons.lock,color: Colors.white,)
-                            ),
                           ),
                           const SizedBox(
                             height: 50,
@@ -200,6 +174,9 @@ class _SignUpState extends State<SignUp> {
                               onPressed: () {
                                 if (_signUpKey.currentState!.validate()) {
                                   _signUpKey.currentState!.save();
+                                  if (_signUpController.verifyInput(
+                                      nameController.text,
+                                      phoneController.text)) {}
                                 }
                               },
                               child: const Text(
@@ -216,9 +193,11 @@ class _SignUpState extends State<SignUp> {
                             children: [
                               const Text("Already Register? "),
                               const Text(" | "),
-                              InkWell(onTap: () {
-                                Get.back();
-                              }, child: const Text("Login")),
+                              InkWell(
+                                  onTap: () {
+                                    Get.back();
+                                  },
+                                  child: const Text("Login")),
                             ],
                           ),
                         ],
