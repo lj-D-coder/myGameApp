@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
-import 'package:get/route_manager.dart';
-import 'package:mygame/core/auth/new_password.dart';
+import 'package:get/get.dart';
+import 'package:mygame/core/auth/signup_controller.dart';
+import 'package:mygame/core/user_type.dart';
+import 'package:mygame/customer/booking/booking.dart';
+import 'package:mygame/homescreen.dart';
 
 class VerifyPin extends StatefulWidget {
   const VerifyPin({super.key});
@@ -11,6 +14,8 @@ class VerifyPin extends StatefulWidget {
 }
 
 class _VerifyPinState extends State<VerifyPin> {
+  final SignUpController signUpController = Get.find();
+  String pinCode = "";
   final _signUpKey = GlobalKey<FormState>();
 
   @override
@@ -80,21 +85,21 @@ class _VerifyPinState extends State<VerifyPin> {
                             height: 20,
                           ),
                           OtpTextField(
-                            numberOfFields: 4,
-                            cursorColor: Colors.white,
-                            borderColor: Colors.white,
-                            fieldWidth: 55,
-                            enabledBorderColor: Colors.white,
-                            focusedBorderColor: Colors.white,
-                            enabled:true,
-                            showFieldAsBox: true,
-                            onCodeChanged: (String code) {
-                            },
-                          ),
+                              numberOfFields: 4,
+                              cursorColor: Colors.white,
+                              borderColor: Colors.white,
+                              fieldWidth: 55,
+                              enabledBorderColor: Colors.white,
+                              focusedBorderColor: Colors.white,
+                              enabled: true,
+                              showFieldAsBox: true,
+                              onSubmit: (value) {
+                                pinCode = value;
+                              }),
                           const Align(
                             alignment: Alignment.centerRight,
                             child: Padding(
-                              padding: EdgeInsets.only(right:45.0,top: 10),
+                              padding: EdgeInsets.only(right: 45.0, top: 10),
                               child: Text(
                                 'Resend Code?',
                               ),
@@ -103,7 +108,6 @@ class _VerifyPinState extends State<VerifyPin> {
                           const SizedBox(
                             height: 50,
                           ),
-                         
                           ElevatedButton(
                               style: ButtonStyle(
                                   shape: MaterialStatePropertyAll(
@@ -113,10 +117,21 @@ class _VerifyPinState extends State<VerifyPin> {
                                   fixedSize: const MaterialStatePropertyAll(
                                       Size(250, 50))),
                               onPressed: () {
-                                // if (_signUpKey.currentState!.validate()) {
-                                //   _signUpKey.currentState!.save();
-                                // }
-                                Get.to(() => NewPassword());
+                                if (_signUpKey.currentState!.validate()) {
+                                  _signUpKey.currentState!.save();
+                                  signUpController
+                                      .verifyPin(pinCode)
+                                      .then((value) {
+                                    if (value) {
+                                      signUpController.signUp().then((value) =>
+                                          Get.to(() => const MyHomePage(
+                                                userType: UserType.player,
+                                              )));
+                                    } else {
+                                      print("ERROR");
+                                    }
+                                  });
+                                }
                               },
                               child: const Text(
                                 "Verify",

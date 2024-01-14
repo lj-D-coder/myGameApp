@@ -13,7 +13,8 @@ class _OtpService implements OtpService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://2factor.in/API/V1/';
+    baseUrl ??=
+        'https://2factor.in/API/V1/411d5bb4-9ff5-11ee-8cbb-0200cd936042/';
   }
 
   final Dio _dio;
@@ -34,7 +35,7 @@ class _OtpService implements OtpService {
     )
             .compose(
               _dio.options,
-              '411d5bb4-9ff5-11ee-8cbb-0200cd936042/:phone/AUTOGEN3/LoginTemplate',
+              'SMS/${phone}/AUTOGEN3/LoginTemplate',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -44,6 +45,36 @@ class _OtpService implements OtpService {
               baseUrl,
             ))));
     final value = OtpResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<OtpVerifyResponse> verifyPin(
+    String session,
+    dynamic otp,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<OtpVerifyResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'SMS/VERIFY/${session}/${otp}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = OtpVerifyResponse.fromJson(_result.data!);
     return value;
   }
 

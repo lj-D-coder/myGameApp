@@ -13,12 +13,52 @@ class _Api implements Api {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://example.com/api';
+    baseUrl ??= 'https://56cd-117-214-14-205.ngrok-free.app/';
   }
 
   final Dio _dio;
 
   String? baseUrl;
+
+  @override
+  Future<SignUpResponse> signUp(
+    dynamic loginId,
+    dynamic userName,
+    dynamic phoneNo,
+    dynamic email,
+    dynamic userRole,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = {
+      'loginId': loginId,
+      'userName': userName,
+      'phoneNo': phoneNo,
+      'email': email,
+      'userRole': userRole,
+    };
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<SignUpResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'application/x-www-form-urlencoded',
+    )
+            .compose(
+              _dio.options,
+              'auth',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = SignUpResponse.fromJson(_result.data!);
+    return value;
+  }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&

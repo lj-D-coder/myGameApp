@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/route_manager.dart';
 import 'package:mygame/core/auth/signup_controller.dart';
+import 'package:mygame/core/auth/verify_pin.dart';
+
+import '../../utils/snackbar.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -12,12 +15,17 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final _signUpKey = GlobalKey<FormState>();
+  final SignUpController _signUpController = Get.put(SignUpController());
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final SignUpController _signUpController = Get.put(SignUpController());
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController phoneController = TextEditingController();
     return Scaffold(
       backgroundColor: Colors.black12,
       body: Container(
@@ -176,7 +184,27 @@ class _SignUpState extends State<SignUp> {
                                   _signUpKey.currentState!.save();
                                   if (_signUpController.verifyInput(
                                       nameController.text,
-                                      phoneController.text)) {}
+                                      phoneController.text)) {
+                                    _signUpController
+                                        .otpGenerate(
+                                            "+91${phoneController.text}")
+                                        .then((value) {
+                                      if (value) {
+                                        _signUpController.loginId =
+                                            phoneController.text;
+                                        _signUpController.phoneNo =
+                                            phoneController.text;
+                                        _signUpController.userName =
+                                            nameController.text;
+
+                                        _signUpController.userRole = "user";
+                                        Get.to(() => const VerifyPin());
+                                      } else {
+                                        showSnackBar(
+                                            context, "Something went wrong");
+                                      }
+                                    });
+                                  }
                                 }
                               },
                               child: const Text(
@@ -200,6 +228,13 @@ class _SignUpState extends State<SignUp> {
                                   child: const Text("Login")),
                             ],
                           ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          const Text(
+                            "*An OTP will be sent through phone call or SMS",
+                            style: TextStyle(fontSize: 9),
+                          )
                         ],
                       ),
                     ))

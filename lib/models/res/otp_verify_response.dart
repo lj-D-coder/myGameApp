@@ -1,20 +1,20 @@
-class OtpResponse {
+class OtpVerifyResponse {
   String? Status;
   String? Details;
 
-  OtpResponse({required this.Status, required this.Details});
+  OtpVerifyResponse({required this.Status, required this.Details});
 
   // Named constructor for creating an instance from a JSON map
-  factory OtpResponse.fromJson(Map<String, dynamic> json) {
-    return OtpResponse(
+  factory OtpVerifyResponse.fromJson(Map<String, dynamic> json) {
+    return OtpVerifyResponse(
       Status: json['Status'],
       Details: json['Details'],
     );
   }
 
   // Named constructor for creating an instance from a map
-  factory OtpResponse.fromMap(Map<String, dynamic> map) {
-    return OtpResponse(
+  factory OtpVerifyResponse.fromMap(Map<String, dynamic> map) {
+    return OtpVerifyResponse(
       Status: map['Status'],
       Details: map['Details'],
     );
