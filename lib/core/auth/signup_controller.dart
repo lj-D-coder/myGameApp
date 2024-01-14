@@ -1,8 +1,13 @@
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mygame/api/api.dart';
 import 'package:mygame/api/otp_service.dart';
+import 'package:mygame/models/req/sign_up_request.dart';
 import 'package:mygame/utils/loading.dart';
 
 class SignUpController extends GetxController {
@@ -19,8 +24,11 @@ class SignUpController extends GetxController {
   String? email;
   String? userRole;
 
+  late GetStorage box;
+
   @override
   void onInit() {
+    box = GetStorage();
     dio = Dio();
     dio!.interceptors
         .add(LogInterceptor(requestBody: true, responseBody: true));
@@ -75,11 +83,20 @@ class SignUpController extends GetxController {
   Future<bool> signUp() async {
     try {
       showDialog();
-      final response =
-          await apiService.signUp(loginId, userName, phoneNo, email, userRole);
+      SignUpRequest request = SignUpRequest();
+      request.loginId = loginId;
+      request.phoneNo = phoneNo;
+      request.userName = userName;
+      request.userRole = userRole;
+
+      final response = await apiService.signUp("application/json", request);
       closeDialog();
 
       if (response.success == true) {
+        var userData = JwtDecoder.decode(response.JWT_token.toString());
+        print(userData);
+        box.write("UserData", userData);
+
         return true;
       } else {
         return false;

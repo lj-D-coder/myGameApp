@@ -22,28 +22,21 @@ class _Api implements Api {
 
   @override
   Future<SignUpResponse> signUp(
-    dynamic loginId,
-    dynamic userName,
-    dynamic phoneNo,
-    dynamic email,
-    dynamic userRole,
+    String contentType,
+    SignUpRequest request,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = {
-      'loginId': loginId,
-      'userName': userName,
-      'phoneNo': phoneNo,
-      'email': email,
-      'userRole': userRole,
-    };
+    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<SignUpResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
-      contentType: 'application/x-www-form-urlencoded',
+      contentType: contentType,
     )
             .compose(
               _dio.options,

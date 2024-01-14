@@ -123,10 +123,13 @@ class _VerifyPinState extends State<VerifyPin> {
                                       .verifyPin(pinCode)
                                       .then((value) {
                                     if (value) {
-                                      signUpController.signUp().then((value) =>
+                                      signUpController.signUp().then((value) {
+                                        if (value) {
                                           Get.to(() => const MyHomePage(
                                                 userType: UserType.player,
-                                              )));
+                                              ));
+                                        }
+                                      });
                                     } else {
                                       print("ERROR");
                                     }
