@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/get_navigation.dart';
-import 'package:mygame/core/auth/forgot_password.dart';
+import 'package:get/get.dart';
+import 'package:mygame/core/auth/login_controller.dart';
 import 'package:mygame/core/auth/signup.dart';
+import 'package:mygame/core/auth/verify_pin.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -12,7 +12,9 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final LoginController loginController = Get.put(LoginController());
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +66,7 @@ class _LoginState extends State<Login> {
                             height: 20,
                           ),
                           TextFormField(
+                            controller: controller,
                             cursorColor: Colors.white,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -104,52 +107,6 @@ class _LoginState extends State<Login> {
                           const SizedBox(
                             height: 20,
                           ),
-                          TextFormField(
-                            cursorColor: Colors.white,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Password is required';
-                              }
-                              return null;
-                            },
-                            obscureText: true,
-                            obscuringCharacter: "*",
-                            decoration: const InputDecoration(
-                              errorBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 2),
-                              ),
-                              errorStyle: TextStyle(color: Colors.white),
-                              isDense: true,
-                              enabled: true,
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 2),
-                              ),
-                              border: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 2),
-                              ),
-                              focusColor: Colors.white,
-                              labelText: "Password",
-                              labelStyle:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.white, width: 2),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                           Align(
-                              alignment: Alignment.centerRight,
-                              child: InkWell(
-                                onTap: (){
-                                  Get.to(()=>ForgotPassword());
-                                },
-                                child: Text("Forgot Password?"))),
                           const SizedBox(
                             height: 20,
                           ),
@@ -164,6 +121,16 @@ class _LoginState extends State<Login> {
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
                                   _formKey.currentState!.save();
+                                  loginController.loginId = controller.text;
+                                  loginController
+                                      .otpGenerate("+91${controller.text}")
+                                      .then((value) {
+                                    if (value) {
+                                      Get.to(() => const VerifyPin(
+                                            type: "Login",
+                                          ));
+                                    }
+                                  });
                                 }
                               },
                               child: const Text(

@@ -198,7 +198,9 @@ class _SignUpState extends State<SignUp> {
                                             nameController.text;
 
                                         _signUpController.userRole = "user";
-                                        Get.to(() => const VerifyPin());
+                                        Get.to(() => const VerifyPin(
+                                              type: "SignUp",
+                                            ));
                                       } else {
                                         showSnackBar(
                                             context, "Something went wrong");

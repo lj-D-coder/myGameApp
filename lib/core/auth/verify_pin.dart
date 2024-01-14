@@ -1,22 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:get/get.dart';
+import 'package:mygame/core/auth/login_controller.dart';
 import 'package:mygame/core/auth/signup_controller.dart';
 import 'package:mygame/core/user_type.dart';
-import 'package:mygame/customer/booking/booking.dart';
 import 'package:mygame/homescreen.dart';
 
 class VerifyPin extends StatefulWidget {
-  const VerifyPin({super.key});
+  final String type;
+  const VerifyPin({super.key, required this.type});
 
   @override
   State<VerifyPin> createState() => _VerifyPinState();
 }
 
 class _VerifyPinState extends State<VerifyPin> {
-  final SignUpController signUpController = Get.find();
+  late final SignUpController signUpController;
+  late final LoginController loginController;
   String pinCode = "";
   final _signUpKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    if (widget.type == "Login") {
+      loginController = Get.find();
+    } else if (widget.type == "SignUp") {
+      signUpController = Get.find();
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,21 +131,39 @@ class _VerifyPinState extends State<VerifyPin> {
                               onPressed: () {
                                 if (_signUpKey.currentState!.validate()) {
                                   _signUpKey.currentState!.save();
-                                  signUpController
-                                      .verifyPin(pinCode)
-                                      .then((value) {
-                                    if (value) {
-                                      signUpController.signUp().then((value) {
-                                        if (value) {
-                                          Get.to(() => const MyHomePage(
-                                                userType: UserType.player,
-                                              ));
-                                        }
-                                      });
-                                    } else {
-                                      print("ERROR");
-                                    }
-                                  });
+                                  if (widget.type == "Login") {
+                                    loginController
+                                        .verifyPin(pinCode)
+                                        .then((value) {
+                                      if (value) {
+                                        loginController.signIn().then((value) {
+                                          if (value) {
+                                            Get.to(() => const MyHomePage(
+                                                  userType: UserType.player,
+                                                ));
+                                          }
+                                        });
+                                      } else {
+                                        print("ERROR");
+                                      }
+                                    });
+                                  } else if (widget.type == "SignUp") {
+                                    signUpController
+                                        .verifyPin(pinCode)
+                                        .then((value) {
+                                      if (value) {
+                                        signUpController.signUp().then((value) {
+                                          if (value) {
+                                            Get.to(() => const MyHomePage(
+                                                  userType: UserType.player,
+                                                ));
+                                          }
+                                        });
+                                      } else {
+                                        print("ERROR");
+                                      }
+                                    });
+                                  }
                                 }
                               },
                               child: const Text(
