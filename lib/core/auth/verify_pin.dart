@@ -142,8 +142,9 @@ class _VerifyPinState extends State<VerifyPin> {
                                         loginController.signIn().then((value) {
                                           if (value) {
                                             flowDecider(enumMapper(
-                                                loginController.userDetails[
-                                                        "userRole"] ??
+                                                loginController
+                                                            .userDetails["data"]
+                                                        ["userRole"] ??
                                                     ""));
                                           } else {
                                             showSnackBar(context,
