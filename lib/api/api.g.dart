@@ -13,7 +13,7 @@ class _Api implements Api {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://56cd-117-214-14-205.ngrok-free.app/';
+    baseUrl ??= 'https://mygame-eight.vercel.app/api/';
   }
 
   final Dio _dio;

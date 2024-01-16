@@ -1,12 +1,15 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mygame/api/api.dart';
 import 'package:mygame/api/otp_service.dart';
 import 'package:mygame/models/req/sign_up_request.dart';
 import 'package:mygame/utils/loading.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class LoginController extends GetxController {
   BuildContext? context;
@@ -34,6 +37,36 @@ class LoginController extends GetxController {
     apiService = Api(dio!);
     context = Get.context;
     super.onInit();
+  }
+
+  Future<UserCredential> signInWithFacebook() async {
+    // Trigger the sign-in flow
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+
+    // Create a credential from the access token
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+
+    // Once signed in, return the UserCredential
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   bool verifyInput(String name, String phone) {
@@ -85,6 +118,9 @@ class LoginController extends GetxController {
       request.loginId = loginId;
       request.phoneNo = phoneNo;
       request.userName = userName;
+      if (email != null) {
+        request.email = email;
+      }
       request.userRole = userRole;
 
       final response = await apiService.signUp("application/json", request);
@@ -92,9 +128,10 @@ class LoginController extends GetxController {
 
       if (response.success == true) {
         var userData = JwtDecoder.decode(response.JWT_token.toString());
-        print(userData);
-
         box.write("UserData", userData);
+        userDetails = userData;
+        print(userDetails);
+        print(userDetails["data"]);
 
         return true;
       } else {

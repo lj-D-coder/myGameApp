@@ -3,6 +3,10 @@ import 'package:get/get.dart';
 import 'package:mygame/core/auth/login_controller.dart';
 import 'package:mygame/core/auth/signup.dart';
 import 'package:mygame/core/auth/verify_pin.dart';
+import 'package:mygame/core/user_type.dart';
+import 'package:mygame/homescreen.dart';
+import 'package:mygame/utils/flow_decider.dart';
+import 'package:mygame/utils/snackbar.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -122,6 +126,7 @@ class _LoginState extends State<Login> {
                                 if (_formKey.currentState!.validate()) {
                                   _formKey.currentState!.save();
                                   loginController.loginId = controller.text;
+                                  loginController.phoneNo = controller.text;
                                   loginController
                                       .otpGenerate("+91${controller.text}")
                                       .then((value) {
@@ -129,6 +134,9 @@ class _LoginState extends State<Login> {
                                       Get.to(() => const VerifyPin(
                                             type: "Login",
                                           ));
+                                    } else {
+                                      showSnackBar(
+                                          context, "Something Went Wrong");
                                     }
                                   });
                                 }
@@ -149,18 +157,54 @@ class _LoginState extends State<Login> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Image.asset(
-                                "assets/images/google.png",
-                                height: 50,
-                                width: 50,
+                              InkWell(
+                                onTap: () {
+                                  loginController
+                                      .signInWithGoogle()
+                                      .then((value) {
+                                    loginController.loginId = value.user!.email;
+                                    loginController.email = value.user!.email;
+                                    loginController.userName =
+                                        value.user?.displayName ?? "";
+                                    loginController.userRole = "user";
+                                    loginController.signIn().then((value) {
+                                      if (value) {
+                                        flowDecider(UserType.player);
+                                      }
+                                    });
+                                  });
+                                },
+                                child: Image.asset(
+                                  "assets/images/google.png",
+                                  height: 50,
+                                  width: 50,
+                                ),
                               ),
                               const SizedBox(
                                 width: 30,
                               ),
-                              Image.asset(
-                                "assets/images/facebook.png",
-                                height: 45,
-                                width: 45,
+                              InkWell(
+                                onTap: () {
+                                  loginController
+                                      .signInWithFacebook()
+                                      .then((value) {
+                                    loginController.loginId = value.user!.email;
+                                    loginController.email = value.user!.email;
+                                    loginController.userName =
+                                        value.user?.displayName ?? "";
+                                    loginController.userRole = "user";
+                                    loginController.signIn().then((value) {
+                                      if (value) {
+                                        flowDecider(UserType.player);
+                                      }
+                                    });
+                                  });
+                                },
+                                child: Image.asset(
+                                  "assets/images/facebook.png",
+                                  height: 45,
+                                  width: 45,
+                                ),
                               )
                             ],
                           ),

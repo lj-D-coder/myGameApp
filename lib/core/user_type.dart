@@ -1,5 +1,1 @@
-enum UserType {
-  player,
-  business,
-  admin
-}
+enum UserType { player, business, admin, noStatus }

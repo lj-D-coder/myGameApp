@@ -5,6 +5,9 @@ import 'package:mygame/core/auth/login_controller.dart';
 import 'package:mygame/core/auth/signup_controller.dart';
 import 'package:mygame/core/user_type.dart';
 import 'package:mygame/homescreen.dart';
+import 'package:mygame/utils/enum_mapper.dart';
+import 'package:mygame/utils/flow_decider.dart';
+import 'package:mygame/utils/snackbar.dart';
 
 class VerifyPin extends StatefulWidget {
   final String type;
@@ -138,13 +141,15 @@ class _VerifyPinState extends State<VerifyPin> {
                                       if (value) {
                                         loginController.signIn().then((value) {
                                           if (value) {
-                                            Get.to(() => const MyHomePage(
-                                                  userType: UserType.player,
-                                                ));
+                                            flowDecider(enumMapper(
+                                                loginController.userDetails[
+                                                        "userRole"] ??
+                                                    ""));
+                                          } else {
+                                            showSnackBar(context,
+                                                "Something went wrong");
                                           }
                                         });
-                                      } else {
-                                        print("ERROR");
                                       }
                                     });
                                   } else if (widget.type == "SignUp") {
@@ -154,13 +159,12 @@ class _VerifyPinState extends State<VerifyPin> {
                                       if (value) {
                                         signUpController.signUp().then((value) {
                                           if (value) {
-                                            Get.to(() => const MyHomePage(
-                                                  userType: UserType.player,
-                                                ));
+                                            flowDecider(UserType.player);
                                           }
                                         });
                                       } else {
-                                        print("ERROR");
+                                        showSnackBar(
+                                            context, "Something Went Wrong");
                                       }
                                     });
                                   }
