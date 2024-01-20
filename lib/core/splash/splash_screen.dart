@@ -1,7 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:mygame/core/auth/login.dart';
+import 'package:mygame/utils/flow_decider.dart';
+
+import '../../utils/enum_mapper.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,11 +15,17 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  GetStorage box = GetStorage();
   @override
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 2), () {
-      Get.to(() => const Login());
+      var userData = box.read('UserData');
+      if (userData != null) {
+        flowDecider(enumMapper(userData["data"]["userRole"]));
+      } else {
+        Get.to(() => const Login());
+      }
     });
   }
 
@@ -34,8 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   image: DecorationImage(
                       image: AssetImage('assets/images/grass.jpeg'),
                       fit: BoxFit.cover),
-                )
-                ),
+                )),
             Image.asset("assets/images/mygame.png")
           ])),
     );
