@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mygame/admin/admin_controller.dart';
 import 'package:mygame/models/req/add_business_model.dart' as addModel;
-import 'package:mygame/models/res/all_biz_info_response.dart';
+import 'package:mygame/models/res/single_biz_info.dart';
 
 import '../../utils/snackbar.dart';
 

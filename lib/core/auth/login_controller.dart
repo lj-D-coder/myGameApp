@@ -10,6 +10,7 @@ import 'package:mygame/api/otp_service.dart';
 import 'package:mygame/models/req/sign_up_request.dart';
 import 'package:mygame/utils/loading.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:mygame/utils/snackbar.dart';
 
 class LoginController extends GetxController {
   BuildContext? context;
@@ -41,32 +42,41 @@ class LoginController extends GetxController {
 
   Future<UserCredential> signInWithFacebook() async {
     // Trigger the sign-in flow
-    final LoginResult loginResult = await FacebookAuth.instance.login();
+    try {
+      final LoginResult loginResult = await FacebookAuth.instance.login();
 
-    // Create a credential from the access token
-    final OAuthCredential facebookAuthCredential =
-        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+      // Create a credential from the access token
+      final OAuthCredential facebookAuthCredential =
+          FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
-    // Once signed in, return the UserCredential
-    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+      // Once signed in, return the UserCredential
+      return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    } catch (err) {
+      showSnackBar(context, "Something Went wrong");
+      rethrow;
+    }
   }
 
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
 
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      // Once signed in, return the UserCredential
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (err) {
+      showSnackBar(context, "Something Went wrong");
+      rethrow;
+    }
   }
 
   bool verifyInput(String name, String phone) {

@@ -116,7 +116,42 @@ class _Api implements Api {
   }
 
   @override
-  Future<GenericResponse> deleteBusiness(
+  Future<GenericResponse<SingleBusinessInfo>> getBusinessInfo(
+    String contentType,
+    String id,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<GenericResponse<SingleBusinessInfo>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              'business/setup/${id}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = GenericResponse<SingleBusinessInfo>.fromJson(
+      _result.data!,
+      (json) => SingleBusinessInfo.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<SimpleResponse> deleteBusiness(
     String contentType,
     String id,
   ) async {
@@ -126,7 +161,7 @@ class _Api implements Api {
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
     final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<GenericResponse>(Options(
+        .fetch<Map<String, dynamic>>(_setStreamType<SimpleResponse>(Options(
       method: 'DELETE',
       headers: _headers,
       extra: _extra,
@@ -143,12 +178,12 @@ class _Api implements Api {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = GenericResponse.fromJson(_result.data!);
+    final value = SimpleResponse.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<GenericResponse> updateBusiness(
+  Future<SimpleResponse> updateBusiness(
     String contentType,
     String id,
     AddBusinessModel request,
@@ -160,7 +195,7 @@ class _Api implements Api {
     final _data = <String, dynamic>{};
     _data.addAll(request.toJson());
     final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<GenericResponse>(Options(
+        .fetch<Map<String, dynamic>>(_setStreamType<SimpleResponse>(Options(
       method: 'PUT',
       headers: _headers,
       extra: _extra,
@@ -177,7 +212,41 @@ class _Api implements Api {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = GenericResponse.fromJson(_result.data!);
+    final value = SimpleResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<SimpleResponse> saveBusinessInfo(
+    String contentType,
+    String id,
+    BusinessData request,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<SimpleResponse>(Options(
+      method: 'PUT',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              'business/setup/${id}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = SimpleResponse.fromJson(_result.data!);
     return value;
   }
 

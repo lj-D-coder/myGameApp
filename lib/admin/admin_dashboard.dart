@@ -3,6 +3,7 @@ import 'package:get/get_instance/get_instance.dart';
 import 'package:get/route_manager.dart';
 import 'package:mygame/admin/admin_controller.dart';
 import 'package:mygame/admin/dialog/add_edit_dialog.dart';
+import 'package:mygame/utils/logout.dart';
 
 import 'all_business_list.dart';
 
@@ -20,6 +21,16 @@ class _AdminDashBoardState extends State<AdminDashBoard> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("myGame"),
+        actions: [
+          InkWell(
+              onTap: () {
+                logout();
+              },
+              child: const Icon(Icons.logout)),
+          const SizedBox(
+            width: 10,
+          )
+        ],
       ),
       body: Center(
           child: Column(

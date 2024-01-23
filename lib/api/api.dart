@@ -4,8 +4,12 @@ import 'package:mygame/models/res/add_business_response.dart';
 import 'package:mygame/models/res/all_biz_info_response.dart';
 import 'package:mygame/models/res/genereic_response.dart';
 import 'package:mygame/models/res/sign_up_response.dart';
+import 'package:mygame/models/res/simple_response.dart';
+import 'package:mygame/models/res/single_biz_info.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
+
+import '../models/res/serializable.dart';
 part 'api.g.dart';
 
 @RestApi(baseUrl: "https://mygame-eight.vercel.app/api/")
@@ -26,13 +30,23 @@ abstract class Api {
   Future<AllBusinessInfoResponse> getAllBusiness(
       @Header("Content-Type") String contentType);
 
+  @GET("business/setup/{id}")
+  Future<GenericResponse<SingleBusinessInfo>> getBusinessInfo(
+      @Header("Content-Type") String contentType, @Path("id") String id);
+
   @DELETE("business/setup/{id}")
-  Future<GenericResponse> deleteBusiness(
+  Future<SimpleResponse> deleteBusiness(
       @Header("Content-Type") String contentType, @Path("id") String id);
 
   @PUT("business/setup/{id}")
-  Future<GenericResponse> updateBusiness(
+  Future<SimpleResponse> updateBusiness(
       @Header("Content-Type") String contentType,
       @Path("id") String id,
       @Body() AddBusinessModel request);
+
+  @PUT("business/setup/{id}")
+  Future<SimpleResponse> saveBusinessInfo(
+      @Header("Content-Type") String contentType,
+      @Path("id") String id,
+      @Body() BusinessData request);
 }

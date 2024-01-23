@@ -5,10 +5,10 @@ class Loading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Colors.transparent,
       body: Center(
-        child: Container(
+        child: SizedBox(
           height: 50,
           width: 50,
           child: CircularProgressIndicator.adaptive(),

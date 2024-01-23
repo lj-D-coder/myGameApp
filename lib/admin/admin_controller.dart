@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mygame/api/api.dart';
 import 'package:mygame/models/req/add_business_model.dart';
-import 'package:mygame/models/res/all_biz_info_response.dart';
+import 'package:mygame/models/res/single_biz_info.dart';
 import 'package:mygame/utils/loading.dart';
 import 'package:mygame/utils/snackbar.dart';
 
@@ -11,7 +11,7 @@ class AdminController extends GetxController {
   late BuildContext context;
   late Dio dio;
   late Api api;
-  RxList<AllBusiness> allBusinessList = <AllBusiness>[].obs;
+  RxList<SingleBusinessInfo> allBusinessList = <SingleBusinessInfo>[].obs;
   @override
   void onInit() {
     context = Get.context!;
@@ -52,7 +52,7 @@ class AdminController extends GetxController {
       final data = await api.getAllBusiness("application/json");
       closeDialog();
       if (data.status == 200) {
-        allBusinessList.value = data.allBusiness ?? [];
+        allBusinessList.value = data.data ?? [];
       } else {
         if (context.mounted) {
           showSnackBar(context, "Something Went Wrong");
