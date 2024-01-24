@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mygame/api/api.dart';
 import 'package:mygame/core/auth/login.dart';
+import 'package:mygame/models/req/pricing_request.dart';
 import 'package:mygame/models/res/single_biz_info.dart';
 import 'package:mygame/utils/loading.dart';
 
@@ -15,6 +16,7 @@ class BusinessController extends GetxController {
   SingleBusinessInfo singleBusinessInfo = SingleBusinessInfo();
   RxBool setUpComplete = false.obs;
   RxList bookingList = [].obs;
+  RxInt step = 1.obs;
 
   @override
   void onInit() {
@@ -62,7 +64,21 @@ class BusinessController extends GetxController {
           await apiService.saveBusinessInfo("application/json", id, info);
       closeDialog();
       if (data.status == 200) {
+        step.value = 2;
         getBusinessData();
+      }
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  Future<void> savePrice(PricingRequest info) async {
+    try {
+      showDialog();
+      final data = await apiService.savePrice("application/json", info);
+      closeDialog();
+      if (data.status == 200) {
+        step.value = 3;
       }
     } catch (err) {
       print(err);

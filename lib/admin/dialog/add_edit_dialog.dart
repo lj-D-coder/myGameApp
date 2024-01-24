@@ -51,11 +51,15 @@ void addEditDialog(context, [BusinessData? data]) {
       model.businessInfo = info;
       model.businessHours = hours;
       model.slot = slot;
-      if (data != null) {
-        adminController.updateBusiness(data.businessID.toString(), model);
-        Get.back();
+      if (controller4.text.contains('@') == false) {
+        showSnackBar(context, "Please enter a valid email");
       } else {
-        adminController.addBusiness(model);
+        if (data != null) {
+          adminController.updateBusiness(data.businessID.toString(), model);
+          Get.back();
+        } else {
+          adminController.addBusiness(model);
+        }
       }
     } else {
       showSnackBar(context, "Please fill all the mandatory data");
@@ -139,8 +143,11 @@ void addEditDialog(context, [BusinessData? data]) {
                             style: const TextStyle(color: Colors.black),
                             controller: controller3,
                             keyboardType: TextInputType.phone,
-                            decoration:
-                                const InputDecoration(hintText: "Phone no"),
+                            maxLength: 10,
+                            decoration: InputDecoration(
+                                hintText: "Phone no",
+                                counterText: "",
+                                counter: Container()),
                           ),
                           const SizedBox(
                             height: 20,
@@ -148,6 +155,7 @@ void addEditDialog(context, [BusinessData? data]) {
                           TextFormField(
                             style: const TextStyle(color: Colors.black),
                             controller: controller4,
+                            keyboardType: TextInputType.emailAddress,
                             decoration:
                                 const InputDecoration(hintText: "Email"),
                           ),

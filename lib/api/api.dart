@@ -1,15 +1,16 @@
 import 'package:mygame/models/req/add_business_model.dart';
+import 'package:mygame/models/req/pricing_request.dart';
 import 'package:mygame/models/req/sign_up_request.dart';
 import 'package:mygame/models/res/add_business_response.dart';
 import 'package:mygame/models/res/all_biz_info_response.dart';
 import 'package:mygame/models/res/genereic_response.dart';
+import 'package:mygame/models/res/pricing_response.dart';
 import 'package:mygame/models/res/sign_up_response.dart';
 import 'package:mygame/models/res/simple_response.dart';
 import 'package:mygame/models/res/single_biz_info.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
-import '../models/res/serializable.dart';
 part 'api.g.dart';
 
 @RestApi(baseUrl: "https://mygame-eight.vercel.app/api/")
@@ -49,4 +50,8 @@ abstract class Api {
       @Header("Content-Type") String contentType,
       @Path("id") String id,
       @Body() BusinessData request);
+
+  @POST("business/pricing")
+  Future<PricingResponse> savePrice(@Header("Content-Type") String contentType,
+      @Body() PricingRequest request);
 }
