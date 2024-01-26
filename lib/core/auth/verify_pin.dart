@@ -146,9 +146,6 @@ class _VerifyPinState extends State<VerifyPin> {
                                                             .userDetails["data"]
                                                         ["userRole"] ??
                                                     ""));
-                                          } else {
-                                            showSnackBar(context,
-                                                "Something went wrong");
                                           }
                                         });
                                       }

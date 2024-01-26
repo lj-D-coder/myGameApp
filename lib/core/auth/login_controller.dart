@@ -145,6 +145,7 @@ class LoginController extends GetxController {
 
         return true;
       } else {
+        showSnackBar(context, response.message);
         return false;
       }
     } catch (err) {
