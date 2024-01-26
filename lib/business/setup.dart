@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mygame/business/business_controller.dart';
 import 'package:mygame/models/req/pricing_request.dart';
 import 'package:mygame/models/res/single_biz_info.dart';
@@ -21,6 +24,7 @@ class _SetUpState extends State<SetUp> {
   FocusNode individualPricenode = FocusNode();
   FocusNode teamPriceNode = FocusNode();
   FocusNode fieldBookingNode = FocusNode();
+  XFile? image;
 
   final businessNameTextController = TextEditingController();
   final startTimeController = TextEditingController();
@@ -103,6 +107,14 @@ class _SetUpState extends State<SetUp> {
       businessController.savePrice(pricingRequest);
     } else {
       showSnackBar(context, "Fill at least one price");
+    }
+  }
+
+  saveImage() {
+    if (image != null && image!.path.isNotEmpty) {
+      businessController.uploadFile(File(image!.path));
+    } else {
+      showSnackBar(context, "Please select one image");
     }
   }
 
@@ -698,122 +710,182 @@ class _SetUpState extends State<SetUp> {
                         ],
                       ),
                     )
-                  : Form(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          SizedBox(
-                            height: 10,
-                          ),
-                          TextFormField(
-                            focusNode: individualPricenode,
-                            controller: individualPrice,
-                            cursorColor: Colors.white,
-                            keyboardType: TextInputType.number,
-                            validator: (value) {},
-                            onEditingComplete: () {
-                              if (individualPrice.text.isNotEmpty) {
-                                Runes input = new Runes(
-                                    ' \u{20B9} ${individualPrice.text} ');
-                                individualPrice.text =
-                                    String.fromCharCodes(input);
-                              }
+                  : businessController.step.value == 2
+                      ? Form(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              TextFormField(
+                                focusNode: individualPricenode,
+                                controller: individualPrice,
+                                cursorColor: Colors.white,
+                                keyboardType: TextInputType.number,
+                                onEditingComplete: () {
+                                  if (individualPrice.text.isNotEmpty) {
+                                    Runes input = Runes(
+                                        ' \u{20B9} ${individualPrice.text} ');
+                                    individualPrice.text =
+                                        String.fromCharCodes(input);
+                                  }
 
-                              FocusScope.of(context).nextFocus();
-                            },
-                            decoration: const InputDecoration(
-                              isDense: true,
-                              helperStyle: TextStyle(),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                  FocusScope.of(context).nextFocus();
+                                },
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                  helperStyle: TextStyle(),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                  focusColor: Colors.white,
+                                  labelText:
+                                      "Indiviual Price (price for single player)",
+                                  labelStyle: TextStyle(
+                                      color: Colors.white, fontSize: 13),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                ),
                               ),
-                              focusColor: Colors.white,
-                              labelText:
-                                  "Indiviual Price (price for single player)",
-                              labelStyle:
-                                  TextStyle(color: Colors.white, fontSize: 13),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                              const SizedBox(
+                                height: 20,
                               ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          TextFormField(
-                            focusNode: teamPriceNode,
-                            controller: teamPrice,
-                            cursorColor: Colors.white,
-                            keyboardType: TextInputType.number,
-                            validator: (value) {},
-                            onEditingComplete: () {
-                              if (teamPrice.text.isNotEmpty) {
-                                Runes input =
-                                    new Runes(' \u{20B9} ${teamPrice.text} ');
-                                teamPrice.text = String.fromCharCodes(input);
-                              }
-                              FocusScope.of(context).nextFocus();
-                            },
-                            decoration: const InputDecoration(
-                              isDense: true,
-                              helperStyle: TextStyle(),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                              TextFormField(
+                                focusNode: teamPriceNode,
+                                controller: teamPrice,
+                                cursorColor: Colors.white,
+                                keyboardType: TextInputType.number,
+                                onEditingComplete: () {
+                                  if (teamPrice.text.isNotEmpty) {
+                                    Runes input =
+                                        Runes(' \u{20B9} ${teamPrice.text} ');
+                                    teamPrice.text =
+                                        String.fromCharCodes(input);
+                                  }
+                                  FocusScope.of(context).nextFocus();
+                                },
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                  helperStyle: TextStyle(),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                  focusColor: Colors.white,
+                                  labelText:
+                                      "Team Price (price for team booking)",
+                                  labelStyle: TextStyle(
+                                      color: Colors.white, fontSize: 13),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                ),
                               ),
-                              focusColor: Colors.white,
-                              labelText: "Team Price (price for team booking)",
-                              labelStyle:
-                                  TextStyle(color: Colors.white, fontSize: 13),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                              const SizedBox(
+                                height: 20,
                               ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          TextFormField(
-                            focusNode: fieldBookingNode,
-                            controller: fieldBooking,
-                            cursorColor: Colors.white,
-                            keyboardType: TextInputType.number,
-                            validator: (value) {},
-                            onEditingComplete: () {
-                              if (fieldBooking.text.isNotEmpty) {
-                                Runes input = new Runes(
-                                    ' \u{20B9} ${fieldBooking.text} ');
-                                fieldBooking.text = String.fromCharCodes(input);
-                              }
+                              TextFormField(
+                                focusNode: fieldBookingNode,
+                                controller: fieldBooking,
+                                cursorColor: Colors.white,
+                                keyboardType: TextInputType.number,
+                                onEditingComplete: () {
+                                  if (fieldBooking.text.isNotEmpty) {
+                                    Runes input = Runes(
+                                        ' \u{20B9} ${fieldBooking.text} ');
+                                    fieldBooking.text =
+                                        String.fromCharCodes(input);
+                                  }
 
-                              FocusScope.of(context).nextFocus();
-                            },
-                            decoration: const InputDecoration(
-                              isDense: true,
-                              helperStyle: TextStyle(),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                                  FocusScope.of(context).nextFocus();
+                                },
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                  helperStyle: TextStyle(),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                  focusColor: Colors.white,
+                                  labelText:
+                                      "Field Booking Price (rate per hour)",
+                                  labelStyle: TextStyle(
+                                      color: Colors.white, fontSize: 13),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                ),
                               ),
-                              focusColor: Colors.white,
-                              labelText: "Field Booking Price (rate per hour)",
-                              labelStyle:
-                                  TextStyle(color: Colors.white, fontSize: 13),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
+                              const SizedBox(
+                                height: 20,
                               ),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    FocusScope.of(context).unfocus();
+                                    savePrice();
+                                  },
+                                  child: const Text("SAVE")),
+                            ],
+                          ),
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            if (image != null)
+                              Container(
+                                height: 200,
+                                child: Image.file(File(image!.path),
+                                    fit: BoxFit.cover),
+                              ),
+                            const SizedBox(
+                              height: 20,
                             ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          ElevatedButton(
-                              onPressed: () {
-                                FocusScope.of(context).unfocus();
-                                savePrice();
+                            InkWell(
+                              onTap: () async {
+                                var imagePicker = ImagePicker();
+                                image = await imagePicker.pickImage(
+                                  source: ImageSource.gallery,
+                                  imageQuality: 10,
+                                );
+                                if (image != null) {
+                                  print(image!.path);
+                                  setState(() {});
+                                }
                               },
-                              child: const Text("SAVE")),
-                        ],
-                      ),
-                    ),
+                              child: Container(
+                                height: 100,
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey,
+                                    ),
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.image),
+                                    image != null
+                                        ? Text("Change Image for Banner Url")
+                                        : Text("Select Image for Banner Url")
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: ElevatedButton(
+                                  onPressed: () {
+                                    FocusScope.of(context).unfocus();
+                                    saveImage();
+                                  },
+                                  child: const Text("SAVE")),
+                            ),
+                          ],
+                        ),
             ),
           ],
         ),

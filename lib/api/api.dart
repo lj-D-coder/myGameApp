@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:mygame/models/req/add_business_model.dart';
 import 'package:mygame/models/req/pricing_request.dart';
 import 'package:mygame/models/req/sign_up_request.dart';
@@ -54,4 +57,11 @@ abstract class Api {
   @POST("business/pricing")
   Future<PricingResponse> savePrice(@Header("Content-Type") String contentType,
       @Body() PricingRequest request);
+
+  @POST("upload")
+  @MultiPart()
+  Future<SimpleResponse> uploadFile(
+    @Part(name: 'businessID') String businessID,
+    @Part(name: "image", fileName: "image") File file,
+  );
 }

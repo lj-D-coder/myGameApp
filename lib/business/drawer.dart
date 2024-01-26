@@ -16,6 +16,14 @@ class _BusinessDrawerState extends State<BusinessDrawer> {
       width: 250,
       child: ListView(
         children: [
+          Container(
+            padding: EdgeInsets.only(left: 20),
+            alignment: Alignment.centerLeft,
+            height: 50,
+            width: 250,
+            child: Text("myGame",
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+          ),
           textWithPadding(const Text("Booking List")),
           textWithPadding(const Text("Settings")),
           textWithPadding(InkWell(

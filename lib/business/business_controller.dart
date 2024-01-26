@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -40,7 +42,12 @@ class BusinessController extends GetxController {
                 false ||
             singleBusinessInfo.businessData!.businessStatus!.setupComplete ==
                 null) {
-          setUpComplete.value = false;
+          if (singleBusinessInfo.businessData!.businessInfo!.bannerUrl !=
+              null) {
+            setUpComplete.value = true;
+          } else {
+            setUpComplete.value = false;
+          }
         } else if (singleBusinessInfo
                 .businessData!.businessStatus!.setupComplete ==
             true) {
@@ -80,6 +87,21 @@ class BusinessController extends GetxController {
       if (data.status == 200) {
         step.value = 3;
       }
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  Future<void> uploadFile(File image) async {
+    var userData = await box.read("UserData");
+    var id = userData["userId"];
+    try {
+      showDialog();
+      final data = await apiService.uploadFile(id, image);
+      if (data.status == 200) {
+        getBusinessData();
+      }
+      closeDialog();
     } catch (err) {
       print(err);
     }

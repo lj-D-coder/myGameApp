@@ -29,13 +29,6 @@ class BusinessAppBar extends StatelessWidget implements PreferredSizeWidget {
         SizedBox(
           width: 15,
         ),
-        CircleAvatar(
-          backgroundColor: Colors.amber,
-          maxRadius: 15,
-        ),
-        SizedBox(
-          width: 15,
-        )
       ],
     );
   }
