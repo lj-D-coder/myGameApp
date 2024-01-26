@@ -230,7 +230,7 @@ class _Api implements Api {
     _data.addAll(request.toJson());
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<SimpleResponse>(Options(
-      method: 'PUT',
+      method: 'PATCH',
       headers: _headers,
       extra: _extra,
       contentType: contentType,

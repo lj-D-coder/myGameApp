@@ -48,7 +48,7 @@ abstract class Api {
       @Path("id") String id,
       @Body() AddBusinessModel request);
 
-  @PUT("business/setup/{id}")
+  @PATCH("business/setup/{id}")
   Future<SimpleResponse> saveBusinessInfo(
       @Header("Content-Type") String contentType,
       @Path("id") String id,

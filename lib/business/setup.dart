@@ -724,16 +724,13 @@ class _SetUpState extends State<SetUp> {
                                 cursorColor: Colors.white,
                                 keyboardType: TextInputType.number,
                                 onEditingComplete: () {
-                                  if (individualPrice.text.isNotEmpty) {
-                                    Runes input = Runes(
-                                        ' \u{20B9} ${individualPrice.text} ');
-                                    individualPrice.text =
-                                        String.fromCharCodes(input);
-                                  }
-
                                   FocusScope.of(context).nextFocus();
                                 },
                                 decoration: const InputDecoration(
+                                  prefix: Text(
+                                    "\u20B9 ",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                   isDense: true,
                                   helperStyle: TextStyle(),
                                   border: OutlineInputBorder(
@@ -758,15 +755,13 @@ class _SetUpState extends State<SetUp> {
                                 cursorColor: Colors.white,
                                 keyboardType: TextInputType.number,
                                 onEditingComplete: () {
-                                  if (teamPrice.text.isNotEmpty) {
-                                    Runes input =
-                                        Runes(' \u{20B9} ${teamPrice.text} ');
-                                    teamPrice.text =
-                                        String.fromCharCodes(input);
-                                  }
                                   FocusScope.of(context).nextFocus();
                                 },
                                 decoration: const InputDecoration(
+                                  prefix: Text(
+                                    "\u20B9 ",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                   isDense: true,
                                   helperStyle: TextStyle(),
                                   border: OutlineInputBorder(
@@ -791,16 +786,13 @@ class _SetUpState extends State<SetUp> {
                                 cursorColor: Colors.white,
                                 keyboardType: TextInputType.number,
                                 onEditingComplete: () {
-                                  if (fieldBooking.text.isNotEmpty) {
-                                    Runes input = Runes(
-                                        ' \u{20B9} ${fieldBooking.text} ');
-                                    fieldBooking.text =
-                                        String.fromCharCodes(input);
-                                  }
-
                                   FocusScope.of(context).nextFocus();
                                 },
                                 decoration: const InputDecoration(
+                                  prefix: Text(
+                                    "\u20B9 ",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                   isDense: true,
                                   helperStyle: TextStyle(),
                                   border: OutlineInputBorder(
