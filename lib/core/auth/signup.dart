@@ -81,6 +81,7 @@ class _SignUpState extends State<SignUp> {
                             height: 20,
                           ),
                           TextFormField(
+                            textCapitalization: TextCapitalization.words,
                             controller: nameController,
                             cursorColor: Colors.white,
                             validator: (value) {
@@ -198,9 +199,10 @@ class _SignUpState extends State<SignUp> {
                                             nameController.text;
 
                                         _signUpController.userRole = "user";
-                                        Get.to(() => const VerifyPin(
-                                              type: "SignUp",
-                                            ));
+                                        Get.to(() => VerifyPin(
+                                            type: "SignUp",
+                                            phone:
+                                                "+91${phoneController.text}"));
                                       } else {
                                         showSnackBar(
                                             context, "Something went wrong");

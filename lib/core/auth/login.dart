@@ -130,8 +130,9 @@ class _LoginState extends State<Login> {
                                       .otpGenerate("+91${controller.text}")
                                       .then((value) {
                                     if (value) {
-                                      Get.to(() => const VerifyPin(
+                                      Get.to(() => VerifyPin(
                                             type: "Login",
+                                            phone: "+91${controller.text}",
                                           ));
                                     } else {
                                       showSnackBar(

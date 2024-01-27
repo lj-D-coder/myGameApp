@@ -11,7 +11,8 @@ import 'package:mygame/utils/snackbar.dart';
 
 class VerifyPin extends StatefulWidget {
   final String type;
-  const VerifyPin({super.key, required this.type});
+  final String phone;
+  const VerifyPin({super.key, required this.type, required this.phone});
 
   @override
   State<VerifyPin> createState() => _VerifyPinState();
@@ -111,12 +112,21 @@ class _VerifyPinState extends State<VerifyPin> {
                               onSubmit: (value) {
                                 pinCode = value;
                               }),
-                          const Align(
+                          Align(
                             alignment: Alignment.centerRight,
-                            child: Padding(
-                              padding: EdgeInsets.only(right: 45.0, top: 10),
-                              child: Text(
-                                'Resend Code?',
+                            child: InkWell(
+                              onTap: () {
+                                if (widget.type == "Login") {
+                                  loginController.otpGenerate(widget.phone);
+                                } else if (widget.type == "SignUp") {
+                                  signUpController.otpGenerate(widget.phone);
+                                }
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.only(right: 45.0, top: 10),
+                                child: Text(
+                                  'Resend Code?',
+                                ),
                               ),
                             ),
                           ),
