@@ -122,7 +122,7 @@ class _VerifyPinState extends State<VerifyPin> {
                                   signUpController.otpGenerate(widget.phone);
                                 }
                               },
-                              child: Padding(
+                              child: const Padding(
                                 padding: EdgeInsets.only(right: 45.0, top: 10),
                                 child: Text(
                                   'Resend Code?',

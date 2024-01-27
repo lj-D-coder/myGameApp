@@ -1,13 +1,19 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mygame/business/business_controller.dart';
 import 'package:mygame/models/req/pricing_request.dart';
-import 'package:mygame/models/res/single_biz_info.dart';
+import 'package:mygame/models/res/single_biz_info.dart' as model;
 import 'package:mygame/utils/snackbar.dart';
+import 'package:location/location.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class SetUp extends StatefulWidget {
   const SetUp({super.key});
@@ -17,6 +23,9 @@ class SetUp extends StatefulWidget {
 }
 
 class _SetUpState extends State<SetUp> {
+  final Completer<GoogleMapController> _controller =
+      Completer<GoogleMapController>();
+
   GetStorage box = GetStorage();
   final _formKey = GlobalKey<FormState>();
   bool showInfo = false;
@@ -25,6 +34,7 @@ class _SetUpState extends State<SetUp> {
   FocusNode teamPriceNode = FocusNode();
   FocusNode fieldBookingNode = FocusNode();
   XFile? image;
+  LocationData? locationData;
 
   final businessNameTextController = TextEditingController();
   final startTimeController = TextEditingController();
@@ -35,11 +45,37 @@ class _SetUpState extends State<SetUp> {
   final emailController = TextEditingController();
   final gstTextController = TextEditingController();
 
-  final location = TextEditingController();
+  final locationText = TextEditingController();
   final address = TextEditingController();
   final individualPrice = TextEditingController();
   final teamPrice = TextEditingController();
   final fieldBooking = TextEditingController();
+  List myMraker = [];
+
+  Future<void> getLocation() async {
+    Location location = Location();
+
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        return;
+      }
+    }
+
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    locationData = await location.getLocation();
+  }
 
   String? _selectedValue = "Is custom length game"; // Initial value
   Map<String, dynamic> localbookingType = {};
@@ -50,26 +86,26 @@ class _SetUpState extends State<SetUp> {
         endTimeController.text.isNotEmpty &&
         gameLengthController.text.isNotEmpty &&
         address.text.isNotEmpty) {
-      BusinessData businessData = BusinessData();
-      BusinessInfo businessInfo = BusinessInfo();
-      BookingType bookingType = BookingType();
-      BusinessStatus businessStatus = BusinessStatus();
-      BusinessHours businessHours = BusinessHours();
-      Slot slot = Slot();
+      model.BusinessData businessData = model.BusinessData();
+      model.BusinessInfo businessInfo = model.BusinessInfo();
+      model.BookingType bookingType = model.BookingType();
+      model.BusinessStatus businessStatus = model.BusinessStatus();
+      model.BusinessHours businessHours = model.BusinessHours();
+      model.Slot slot = model.Slot();
       businessInfo.name = businessNameTextController.text;
       businessInfo.email = emailController.text;
       businessInfo.gstNo = gstTextController.text;
       businessInfo.address = address.text;
-      Location location = Location();
-      location.latitude = "0.0";
-      location.longitude = "0.0";
+      model.Location location = model.Location();
+      location.latitude = locationText.text.split(",").first;
+      location.longitude = locationText.text.split(",")[1];
       businessInfo.location = location;
       businessStatus.setupComplete = false;
       businessHours.openTime = startTimeController.text;
       businessHours.closeTime = endTimeController.text;
       businessHours.breakStart = breakStart.text;
       businessHours.breakEnd = breakEnd.text;
-      bookingType = BookingType.fromJson(localbookingType);
+      bookingType = model.BookingType.fromJson(localbookingType);
       slot.customGameLength = _selectedValue == "yes" ? true : false;
       slot.gameLength = int.parse(gameLengthController.text);
       businessData.businessInfo = businessInfo;
@@ -149,6 +185,13 @@ class _SetUpState extends State<SetUp> {
       gameLengthController.text = businessController
           .singleBusinessInfo.businessData!.slot!.gameLength
           .toString();
+      if (businessController
+              .singleBusinessInfo.businessData!.businessInfo!.location !=
+          null) {
+        locationText.text =
+            "${businessController.singleBusinessInfo.businessData!.businessInfo!.location!.latitude!},${businessController.singleBusinessInfo.businessData!.businessInfo!.location!.longitude!}";
+      }
+
       address.text = businessController
               .singleBusinessInfo.businessData!.businessInfo!.address ??
           "";
@@ -211,6 +254,7 @@ class _SetUpState extends State<SetUp> {
 
   @override
   void initState() {
+    getLocation();
     initializeData();
     super.initState();
   }
@@ -573,11 +617,98 @@ class _SetUpState extends State<SetUp> {
                             height: 10,
                           ),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              if (locationData != null) {
+                                showDialog(
+                                    context: context,
+                                    builder: (ctx) {
+                                      return Scaffold(
+                                        backgroundColor: Colors.transparent,
+                                        body: Center(
+                                          child: Stack(
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.all(20),
+                                                height: 500,
+                                                width: 500,
+                                                child: PointerInterceptor(
+                                                  child: StatefulBuilder(
+                                                    builder: (context, state) {
+                                                      return GoogleMap(
+                                                          markers: Set.from(
+                                                              myMraker),
+                                                          onTap: (tappedPoint) {
+                                                            myMraker = [];
+                                                            myMraker.add(Marker(
+                                                                markerId: MarkerId(
+                                                                    tappedPoint
+                                                                        .toString()),
+                                                                position:
+                                                                    tappedPoint));
+                                                            locationText.text =
+                                                                "${tappedPoint.latitude},${tappedPoint.longitude}";
+
+                                                            state(() {});
+                                                            Get.back();
+                                                          },
+                                                          onMapCreated:
+                                                              (GoogleMapController
+                                                                  controller) {
+                                                            _controller
+                                                                .complete(
+                                                                    controller);
+                                                          },
+                                                          myLocationEnabled:
+                                                              true,
+                                                          myLocationButtonEnabled:
+                                                              true,
+                                                          initialCameraPosition:
+                                                              CameraPosition(
+                                                                  zoom: 30,
+                                                                  target: LatLng(
+                                                                      locationData!
+                                                                          .latitude!,
+                                                                      locationData!
+                                                                          .longitude!)));
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                left: 25,
+                                                top: 25,
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    Get.back();
+                                                  },
+                                                  child: const CircleAvatar(
+                                                    maxRadius: 15,
+                                                    minRadius: 15,
+                                                    backgroundColor:
+                                                        Colors.black,
+                                                    child: Icon(
+                                                      Icons.close,
+                                                      size: 30,
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              } else {
+                                showSnackBar(
+                                    context, "Location still initializing");
+                              }
+                            },
                             child: IgnorePointer(
                               ignoring: true,
                               child: TextFormField(
-                                controller: location,
+                                controller: locationText,
                                 cursorColor: Colors.white,
                                 keyboardType: TextInputType.number,
                                 validator: (value) {},
