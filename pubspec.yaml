@@ -84,7 +84,11 @@ flutter:
     - assets/images/ball2.png
     - assets/images/google.png
     - assets/images/facebook.png
-    - assets/images/ball3.png
+    - assets/images/arrowGreen.png
+    - assets/images/fb.png
+    - assets/images/followvert.png
+    - assets/images/heart.png
+    - assets/images/inst.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

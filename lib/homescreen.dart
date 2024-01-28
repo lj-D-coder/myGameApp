@@ -26,9 +26,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final pages = [
     const HomeFeed(),
-    const Booking(),
-    const Booking(),
-    const Booking(),
+    const HomeFeed(),
+    const HomeFeed(),
+    const HomeFeed(),
   ];
 
   @override
@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ? Scaffold(
             backgroundColor: Theme.of(context).primaryColor,
             appBar: const CommonAppBar(),
-            bottomNavigationBar: Container(
+            bottomNavigationBar: SizedBox(
               height: 60,
               child: BottomNavigationBar(
                   currentIndex: currentIndex,

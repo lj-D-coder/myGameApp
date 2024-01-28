@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mygame/customer/booking/business_details.dart';
 
 class HomeFeed extends StatefulWidget {
   const HomeFeed({super.key});
@@ -112,11 +114,16 @@ class _HomeFeedState extends State<HomeFeed> {
                         borderRadius: BorderRadius.circular(5),
                         color: Colors.white,
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(5),
-                        child: Image.network(
-                          "https://media.hudle.in/venues/2eb223fa-f9f5-4f64-a73c-40986bb91442/photo/d6d08022281596c32755ac999fa26fb9c6af2f4c",
-                          fit: BoxFit.cover,
+                      child: InkWell(
+                        onTap: () {
+                          Get.to(() => BusinessDetails());
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Image.network(
+                            "https://media.hudle.in/venues/2eb223fa-f9f5-4f64-a73c-40986bb91442/photo/d6d08022281596c32755ac999fa26fb9c6af2f4c",
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
