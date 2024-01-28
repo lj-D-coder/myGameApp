@@ -3,6 +3,7 @@ import 'package:mygame/business/business_appbar.dart';
 import 'package:mygame/business/setup.dart';
 import 'package:mygame/core/user_type.dart';
 import 'package:mygame/customer/booking/booking.dart';
+import 'package:mygame/customer/booking/home_feed.dart';
 import 'package:mygame/customer/common_widgets/common_app_bar.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -24,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   final pages = [
-    const Booking(),
+    const HomeFeed(),
     const Booking(),
     const Booking(),
     const Booking(),
@@ -36,34 +37,37 @@ class _MyHomePageState extends State<MyHomePage> {
         ? Scaffold(
             backgroundColor: Theme.of(context).primaryColor,
             appBar: const CommonAppBar(),
-            bottomNavigationBar: BottomNavigationBar(
-                currentIndex: currentIndex,
-                onTap: (value) {
-                  onTap(value);
-                },
-                items: const [
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.home,
+            bottomNavigationBar: Container(
+              height: 60,
+              child: BottomNavigationBar(
+                  currentIndex: currentIndex,
+                  onTap: (value) {
+                    onTap(value);
+                  },
+                  items: const [
+                    BottomNavigationBarItem(
+                      icon: Icon(
+                        Icons.home,
+                      ),
+                      label: "Home",
                     ),
-                    label: "Home",
-                  ),
-                  BottomNavigationBarItem(
-                      icon: Icon(
-                        Icons.pin_drop,
-                      ),
-                      label: "Game"),
-                  BottomNavigationBarItem(
-                      icon: Icon(
-                        Icons.menu,
-                      ),
-                      label: "My Ticket"),
-                  BottomNavigationBarItem(
-                      icon: Icon(
-                        Icons.settings,
-                      ),
-                      label: "Settings")
-                ]),
+                    BottomNavigationBarItem(
+                        icon: Icon(
+                          Icons.pin_drop,
+                        ),
+                        label: "Game"),
+                    BottomNavigationBarItem(
+                        icon: Icon(
+                          Icons.menu,
+                        ),
+                        label: "My Ticket"),
+                    BottomNavigationBarItem(
+                        icon: Icon(
+                          Icons.settings,
+                        ),
+                        label: "Settings")
+                  ]),
+            ),
             body: pages.elementAt(currentIndex))
         : Scaffold(
             appBar: const BusinessAppBar(),
@@ -73,7 +77,9 @@ class _MyHomePageState extends State<MyHomePage> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  const SizedBox(height: 100,),
+                  const SizedBox(
+                    height: 100,
+                  ),
                   ListTile(
                     title: const Text('Home'),
                     onTap: () {
