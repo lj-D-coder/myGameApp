@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mygame/customer/booking/lineup.dart';
 import 'package:mygame/customer/booking/time_selection.dart';
 import 'package:mygame/customer/common_widgets/common_app_bar.dart';
 
@@ -105,32 +106,41 @@ class _BusinessDetailsState extends State<BusinessDetails> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.all(5),
-                    height: 50,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(80),
-                      color: Colors.black38,
-                    ),
-                    child: Text(
-                      "Info",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.all(5),
+                      height: 50,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(80),
+                        color: Colors.black38,
+                      ),
+                      child: const Text(
+                        "Info",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.all(5),
-                    height: 50,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(80),
-                      color: Colors.black38,
-                    ),
-                    child: Text(
-                      "Upcomming",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                  InkWell(
+                    onTap: () {
+                      Get.to(() => const LineUp(),
+                          transition: Transition.downToUp);
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.all(5),
+                      height: 50,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(80),
+                        color: Colors.black38,
+                      ),
+                      child: const Text(
+                        "Upcomming",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                   Container(

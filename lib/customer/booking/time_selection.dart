@@ -233,11 +233,19 @@ class _TimeSelectionState extends State<TimeSelection> {
                         ),
                       )),
                   const Spacer(),
-                  if (_selectedBookingType != null)
+                  if (_selectedBookingType == "Individual")
                     const Padding(
                         padding: EdgeInsets.only(right: 25.0),
                         child: Text(
                           "\u20B9 500",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        )),
+                  if (_selectedBookingType == "Playground")
+                    const Padding(
+                        padding: EdgeInsets.only(right: 25.0),
+                        child: Text(
+                          "\u20B9 500 / hr",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ))
@@ -292,9 +300,7 @@ class _TimeSelectionState extends State<TimeSelection> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 30,
-                    ),
+                    Spacer(),
                     if (_selectedBookingType == "Individual")
                       Container(
                           alignment: Alignment.center,
