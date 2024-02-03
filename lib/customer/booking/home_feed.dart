@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mygame/customer/booking/booking_controller.dart';
 import 'package:mygame/customer/booking/business_details.dart';
 
 class HomeFeed extends StatefulWidget {
@@ -13,6 +14,7 @@ class _HomeFeedState extends State<HomeFeed> {
   final ScrollController _textAController = ScrollController();
   final ScrollController _textBController = ScrollController();
   final ScrollController _pageController = ScrollController();
+  final BookingController _bookingController = Get.put(BookingController());
   bool _scrolling = false;
 
   getMinMaxPosition(double tryScrollTo) {

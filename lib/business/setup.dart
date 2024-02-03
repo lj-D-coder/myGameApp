@@ -42,6 +42,7 @@ class _SetUpState extends State<SetUp> {
   final breakStart = TextEditingController();
   final breakEnd = TextEditingController();
   final gameLengthController = TextEditingController();
+  final playerPerSide = TextEditingController();
   final emailController = TextEditingController();
   final gstTextController = TextEditingController();
 
@@ -85,6 +86,7 @@ class _SetUpState extends State<SetUp> {
         startTimeController.text.isNotEmpty &&
         endTimeController.text.isNotEmpty &&
         gameLengthController.text.isNotEmpty &&
+        playerPerSide.text.isNotEmpty &&
         address.text.isNotEmpty) {
       model.BusinessData businessData = model.BusinessData();
       model.BusinessInfo businessInfo = model.BusinessInfo();
@@ -106,6 +108,7 @@ class _SetUpState extends State<SetUp> {
       businessHours.breakStart = breakStart.text;
       businessHours.breakEnd = breakEnd.text;
       bookingType = model.BookingType.fromJson(localbookingType);
+      slot.playerPerSide = int.parse(playerPerSide.text);
       slot.customGameLength = _selectedValue == "yes" ? true : false;
       slot.gameLength = int.parse(gameLengthController.text);
       businessData.businessInfo = businessInfo;
@@ -177,6 +180,10 @@ class _SetUpState extends State<SetUp> {
       gstTextController.text = businessController
               .singleBusinessInfo.businessData!.businessInfo!.gstNo ??
           "";
+
+      playerPerSide.text = businessController
+          .singleBusinessInfo.businessData!.slot!.playerPerSide
+          .toString();
 
       localbookingType = businessController
           .singleBusinessInfo.businessData!.bookingType!
@@ -504,6 +511,34 @@ class _SetUpState extends State<SetUp> {
                                     borderSide: BorderSide(color: Colors.white),
                                   ),
                                 ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            controller: playerPerSide,
+                            cursorColor: Colors.white,
+                            keyboardType: TextInputType.number,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Player per side is required';
+                              }
+                              return null;
+                            },
+                            decoration: const InputDecoration(
+                              isDense: true,
+                              helperStyle: TextStyle(),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              focusColor: Colors.white,
+                              labelText: "Player per side length",
+                              labelStyle:
+                                  TextStyle(color: Colors.white, fontSize: 13),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
                               ),
                             ),
                           ),

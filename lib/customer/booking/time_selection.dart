@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:mygame/customer/booking/booking_controller.dart';
+import 'package:mygame/customer/booking/success.dart';
 import 'package:mygame/customer/common_widgets/common_app_bar.dart';
+import 'package:mygame/models/req/booking_request.dart';
 import 'package:mygame/utils/snackbar.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class TimeSelection extends StatefulWidget {
@@ -12,15 +18,45 @@ class TimeSelection extends StatefulWidget {
 }
 
 class _TimeSelectionState extends State<TimeSelection> {
+  final BookingController _bookingController = Get.find();
   DateTime? userSelectedDay = DateTime.now();
   var _selectedValue;
   var _selectedBookingType;
+  late Razorpay _razorpay;
+
+  @override
+  void initState() {
+    // Removes all listeners
+    _razorpay = Razorpay();
+    attachRazorPayListeners();
+
+    super.initState();
+  }
+
+  void attachRazorPayListeners() {
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    Get.to(() => const PaymentSuccessfulPage());
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    // Do something when payment fails
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    // Do something when an external wallet was selected
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Theme.of(context).primaryColor,
         appBar: const CommonAppBar(),
-        body: Container(
+        body: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
               child: SizedBox(
@@ -59,7 +95,6 @@ class _TimeSelectionState extends State<TimeSelection> {
                       return isSameDay(userSelectedDay, day);
                     },
                     onDaySelected: (selectedDay, focusedDay) {
-                      // Call `setState()` when updating the selected day
                       setState(() {
                         userSelectedDay = selectedDay;
                       });
@@ -96,7 +131,7 @@ class _TimeSelectionState extends State<TimeSelection> {
                                   children: [
                                     Text(
                                       '${index + 1}:00 ',
-                                      style: const TextStyle(fontSize: 7),
+                                      style: const TextStyle(fontSize: 10),
                                     ),
                                     Container(
                                       width: 2,
@@ -173,7 +208,7 @@ class _TimeSelectionState extends State<TimeSelection> {
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: 60,
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5.0),
                     border: Border.all(color: Colors.grey),
@@ -195,17 +230,7 @@ class _TimeSelectionState extends State<TimeSelection> {
                           _selectedValue = newValue.toString();
                         });
                       },
-                      items: <String>[
-                        'Select your Slot',
-                        '8 am to 9 am',
-                        '9 am to 10 am',
-                        '10 am to 11 am',
-                        '11 am to 12 am',
-                        '12 am to 1 pm',
-                        '2 pm to 3 pm',
-                        '4 am to 5 pm',
-                        '6 am to 7 pm',
-                      ]
+                      items: _bookingController.timeRanges
                           .map<DropdownMenuItem<String>>(
                             (String value) => DropdownMenuItem<String>(
                               value: value,
@@ -234,21 +259,25 @@ class _TimeSelectionState extends State<TimeSelection> {
                       )),
                   const Spacer(),
                   if (_selectedBookingType == "Individual")
-                    const Padding(
-                        padding: EdgeInsets.only(right: 25.0),
-                        child: Text(
-                          "\u20B9 500",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        )),
+                    Obx(
+                      () => Padding(
+                          padding: const EdgeInsets.only(right: 25.0),
+                          child: Text(
+                            "\u20B9 ${_bookingController.price!.value * _bookingController.qty.value}",
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          )),
+                    ),
                   if (_selectedBookingType == "Playground")
-                    const Padding(
-                        padding: EdgeInsets.only(right: 25.0),
-                        child: Text(
-                          "\u20B9 500 / hr",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ))
+                    Obx(
+                      () => Padding(
+                          padding: const EdgeInsets.only(right: 25.0),
+                          child: Text(
+                            "\u20B9 ${_bookingController.price.value} / hr",
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          )),
+                    )
                 ],
               ),
               Padding(
@@ -300,42 +329,106 @@ class _TimeSelectionState extends State<TimeSelection> {
                         ),
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     if (_selectedBookingType == "Individual")
                       Container(
-                          alignment: Alignment.center,
-                          width: 100,
-                          height: 40,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.white)),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.remove),
-                              SizedBox(
-                                width: 10,
+                        alignment: Alignment.center,
+                        width: 120,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.white)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Wrapped in a larger InkWell
+                            InkWell(
+                              onTap: () {
+                                if (_bookingController.qty > 1) {
+                                  _bookingController.qty =
+                                      _bookingController.qty - 1;
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(
+                                    5), // Adjust the padding as needed
+                                child: const Icon(Icons.remove),
                               ),
-                              Text(
-                                "1",
-                                style: TextStyle(fontSize: 20),
+                            ),
+                            const SizedBox(width: 10),
+                            Obx(
+                              () => Text(
+                                _bookingController.qty.toString(),
+                                style: const TextStyle(fontSize: 20),
                               ),
-                              SizedBox(
-                                width: 10,
+                            ),
+                            const SizedBox(width: 10),
+                            // Wrapped in a larger InkWell
+                            InkWell(
+                              onTap: () {
+                                _bookingController.qty =
+                                    _bookingController.qty + 1;
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(
+                                    5), // Adjust the padding as needed
+                                child: const Icon(Icons.add),
                               ),
-                              Icon(Icons.add)
-                            ],
-                          ))
+                            ),
+                          ],
+                        ),
+                      )
                   ],
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               ElevatedButton(
                   style: ButtonStyle(
                       shape: MaterialStatePropertyAll(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5)))),
                   onPressed: () {
-                    if (_selectedBookingType != null) {
+                    if (_selectedBookingType != null &&
+                        _selectedValue != null) {
+                      GetStorage box = GetStorage();
+                      var userData = box.read('UserData');
+                      var userId = userData["userId"];
+                      BookingRequest request = BookingRequest();
+                      request.userId = userId;
+                      request.businessID = _bookingController
+                          .singleBusinessInfo.businessData!.businessID;
+                      request.date =
+                          userSelectedDay.toString().split(" ").first;
+                      List<String> times = _selectedValue.split(" - ");
+
+                      request.startTime = convertTo24HourFormat(times[0]);
+                      request.endTime = convertTo24HourFormat(times[1]);
+
+                      request.bookingType =
+                          _selectedBookingType.toString().toLowerCase();
+                      request.matchId = null;
+                      request.sideChoose = "rightTeam";
+                      request.userName = [userData["data"]["userName"]];
+
+                      PaymentInfo paymentInfo = PaymentInfo();
+                      paymentInfo.paymentMode = "online";
+                      paymentInfo.amountPaid = _bookingController.price.value;
+                      paymentInfo.quantity = _bookingController.qty.value;
+                      paymentInfo.discount = 0;
+                      request.paymentInfo = paymentInfo;
+                      _bookingController.makeBooking(request).then((value) {
+                        var options = {
+                          'key': 'rzp_test_P7zizep0w8PLAX',
+                          'amount': _bookingController.price.value * 100,
+                          'name': 'myGame',
+                          'description':
+                              '${_bookingController.bookingResponse.bookingId} matchId',
+                          'prefill': {
+                            'contact': '${userData["data"]["phoneNo"] ?? ""}',
+                            'email': "${userData["data"]["email"] ?? ""}"
+                          }
+                        };
+                        _razorpay.open(options);
+                      });
                     } else {
                       showSnackBar(context, "Please select a bookng type");
                     }
@@ -345,5 +438,30 @@ class _TimeSelectionState extends State<TimeSelection> {
             ]),
           )),
         ));
+  }
+
+  String convertTo24HourFormat(String time) {
+    // Parsing the time and splitting hours and minutes
+    List<String> parts = time.split(":");
+    int hours = int.parse(parts[0]);
+    String minutes = parts[1].substring(0, 2);
+    String meridian = time.substring(time.length - 2);
+
+    // Converting to 24-hour format
+    if (meridian == "PM" && hours < 12) {
+      hours += 12;
+    } else if (meridian == "AM" && hours == 12) {
+      hours = 0;
+    }
+
+    // Formatting the result
+    String hoursStr = hours.toString().padLeft(2, '0');
+    return "$hoursStr:$minutes";
+  }
+
+  @override
+  void dispose() {
+    _razorpay.clear();
+    super.dispose();
   }
 }

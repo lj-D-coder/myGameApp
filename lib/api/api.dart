@@ -2,10 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:mygame/models/req/add_business_model.dart';
+import 'package:mygame/models/req/booking_request.dart';
+import 'package:mygame/models/req/confirm_booking.dart';
 import 'package:mygame/models/req/pricing_request.dart';
 import 'package:mygame/models/req/sign_up_request.dart';
 import 'package:mygame/models/res/add_business_response.dart';
 import 'package:mygame/models/res/all_biz_info_response.dart';
+import 'package:mygame/models/res/booking_response.dart';
 import 'package:mygame/models/res/genereic_response.dart';
 import 'package:mygame/models/res/pricing_response.dart';
 import 'package:mygame/models/res/sign_up_response.dart';
@@ -64,4 +67,13 @@ abstract class Api {
     @Part(name: 'businessID') String businessID,
     @Part(name: "image", fileName: "image") File file,
   );
+
+  @POST("client/booking")
+  Future<BookingResponse> booking(@Header("Content-Type") String contentType,
+      @Body() BookingRequest request);
+
+  @POST("client/booking/confirmation")
+  Future<BookingResponse> confirmBooking(
+      @Header("Content-Type") String contentType,
+      @Body() ConfirmBookingRequest request);
 }

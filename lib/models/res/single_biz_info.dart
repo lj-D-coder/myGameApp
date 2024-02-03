@@ -9,6 +9,7 @@ class SingleBusinessInfo implements Serializable {
   String? createdAt;
   String? updatedAt;
   BusinessData? businessData;
+  PricingData? pricingData;
 
   SingleBusinessInfo(
       {this.loginId,
@@ -18,7 +19,8 @@ class SingleBusinessInfo implements Serializable {
       this.userRole,
       this.createdAt,
       this.updatedAt,
-      this.businessData});
+      this.businessData,
+      this.pricingData});
 
   factory SingleBusinessInfo.fromJson(Map<String, dynamic> json) {
     return SingleBusinessInfo(
@@ -31,6 +33,9 @@ class SingleBusinessInfo implements Serializable {
       updatedAt: json['updatedAt'],
       businessData: json['businessData'] != null
           ? new BusinessData.fromJson(json['businessData'])
+          : null,
+      pricingData: json['PricingData'] != null
+          ? new PricingData.fromJson(json['PricingData'])
           : null,
     );
   }
@@ -47,6 +52,9 @@ class SingleBusinessInfo implements Serializable {
     data['updatedAt'] = this.updatedAt;
     if (this.businessData != null) {
       data['businessData'] = this.businessData!.toJson();
+    }
+    if (this.pricingData != null) {
+      data['PricingData'] = this.pricingData!.toJson();
     }
     return data;
   }
@@ -290,13 +298,15 @@ class BusinessHours {
 
 class Slot {
   int? gameLength;
+  int? playerPerSide;
   bool? customGameLength;
 
-  Slot({this.gameLength, this.customGameLength});
+  Slot({this.gameLength, this.playerPerSide, this.customGameLength});
 
   factory Slot.fromJson(Map<String, dynamic> json) {
     return Slot(
       gameLength: json['gameLength'],
+      playerPerSide: json['playerPerSide'],
       customGameLength: json['customGameLength'],
     );
   }
@@ -304,6 +314,7 @@ class Slot {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['gameLength'] = this.gameLength;
+    data['playerPerSide'] = this.playerPerSide;
     data['customGameLength'] = this.customGameLength;
     return data;
   }
@@ -333,5 +344,117 @@ class BookingType {
     data['team'] = this.team;
     data['TimeRanges'] = this.timeRanges;
     return data;
+  }
+}
+
+class PricingData {
+  Price? price;
+  String? businessID;
+  String? createdAt;
+  String? updatedAt;
+
+  PricingData({
+    this.price,
+    this.businessID,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  factory PricingData.fromJson(Map<String, dynamic> json) {
+    return PricingData(
+        price: json['price'] != null ? new Price.fromJson(json['price']) : null,
+        businessID: json['businessID'],
+        createdAt: json['createdDate'],
+        updatedAt: json['updatedAt']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.price != null) {
+      data['price'] = this.price!.toJson();
+    }
+    data['businessID'] = this.businessID;
+    data['createdAt'] = this.createdAt;
+    data['updatedAt'] = this.updatedAt;
+    return data;
+  }
+}
+
+class Price {
+  Individual? individual;
+  Individual? team;
+  Individual? field;
+
+  Price({this.individual, this.team, this.field});
+
+  factory Price.fromJson(Map<String, dynamic> json) {
+    return Price(
+        individual: json['individual'] != null
+            ? new Individual.fromJson(json['individual'])
+            : null,
+        team:
+            json['team'] != null ? new Individual.fromJson(json['team']) : null,
+        field: json['field'] != null
+            ? new Individual.fromJson(json['field'])
+            : null);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.individual != null) {
+      data['individual'] = this.individual!.toJson();
+    }
+    if (this.team != null) {
+      data['team'] = this.team!.toJson();
+    }
+    if (this.field != null) {
+      data['field'] = this.field!.toJson();
+    }
+    return data;
+  }
+}
+
+class Individual {
+  Coupon? coupon;
+  String? type;
+  String? price;
+  String? discount;
+
+  Individual({
+    this.coupon,
+    this.type,
+    this.price,
+    this.discount,
+  });
+
+  factory Individual.fromJson(Map<String, dynamic> json) {
+    return Individual(
+      coupon:
+          json['coupon'] != null ? new Coupon.fromJson(json['coupon']) : null,
+      type: json['type'],
+      price: json['Price'],
+      discount: json['discount'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.coupon != null) {
+      data['coupon'] = this.coupon!;
+    }
+    data['type'] = this.type;
+    data['Price'] = this.price;
+    data['discount'] = this.discount;
+    return data;
+  }
+}
+
+class Coupon {
+  List<dynamic>? validCoupon;
+
+  Coupon({this.validCoupon});
+
+  factory Coupon.fromJson(Map<String, dynamic> json) {
+    return Coupon(validCoupon: json['validCoupon']);
   }
 }
