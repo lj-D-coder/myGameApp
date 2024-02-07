@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:mygame/api/api.dart';
 import 'package:mygame/api/otp_service.dart';
 import 'package:mygame/models/res/booking_response.dart';
+import 'package:mygame/models/res/get_ranges_response.dart';
 import 'package:mygame/models/res/single_biz_info.dart';
 import 'package:mygame/utils/loading.dart';
 
@@ -16,10 +17,13 @@ class BookingController extends GetxController {
   late Api apiService;
   List<String> timeRanges = [];
   RxBool businessDeatilsLoaded = false.obs;
+  RxBool getRangesLoaded = false.obs;
 
   late GetStorage box;
   SingleBusinessInfo singleBusinessInfo = SingleBusinessInfo();
   BookingResponse bookingResponse = BookingResponse();
+  RxString confirmBookingStatus = "".obs;
+  GetRangesResponse getRangesResponse = GetRangesResponse();
 
   RxInt price = 0.obs;
   RxInt qty = 1.obs;
@@ -27,6 +31,7 @@ class BookingController extends GetxController {
 
   @override
   void onInit() {
+    confirmBookingStatus.value = "";
     box = GetStorage();
     dio = Dio();
     dio!.interceptors
@@ -95,7 +100,24 @@ class BookingController extends GetxController {
         businessDeatilsLoaded.value = true;
         price.value = int.parse(
             singleBusinessInfo.pricingData!.price!.individual!.price!);
-        getRanges();
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  Future<void> getTimeRanges(req, [showLoader]) async {
+    try {
+      if (showLoader != null) {
+        showDialog();
+      }
+      final data = await apiService.getTimeRanges("application/json", req);
+      if (showLoader != null) {
+        closeDialog();
+      }
+      if (data.status == 200) {
+        getRangesResponse = data;
+        getRangesLoaded.value = true;
       }
     } catch (err) {
       throw err;
@@ -123,8 +145,13 @@ class BookingController extends GetxController {
   Future<void> confirmBooking(request) async {
     try {
       final data = await apiService.confirmBooking("application/json", request);
-      if (data.status == 200) {}
+      if (data.message == "Success") {
+        confirmBookingStatus.value = "success";
+      } else {
+        confirmBookingStatus.value = "failed";
+      }
     } catch (err) {
+      confirmBookingStatus.value = "failed";
       throw err;
     }
   }

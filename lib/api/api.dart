@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:mygame/models/req/add_business_model.dart';
 import 'package:mygame/models/req/booking_request.dart';
 import 'package:mygame/models/req/confirm_booking.dart';
+import 'package:mygame/models/req/get_ranges_req.dart';
 import 'package:mygame/models/req/pricing_request.dart';
 import 'package:mygame/models/req/sign_up_request.dart';
 import 'package:mygame/models/res/add_business_response.dart';
 import 'package:mygame/models/res/all_biz_info_response.dart';
 import 'package:mygame/models/res/booking_response.dart';
 import 'package:mygame/models/res/genereic_response.dart';
+import 'package:mygame/models/res/get_ranges_response.dart';
 import 'package:mygame/models/res/pricing_response.dart';
 import 'package:mygame/models/res/sign_up_response.dart';
 import 'package:mygame/models/res/simple_response.dart';
@@ -73,7 +75,11 @@ abstract class Api {
       @Body() BookingRequest request);
 
   @POST("client/booking/confirmation")
-  Future<BookingResponse> confirmBooking(
+  Future<SimpleResponse> confirmBooking(
       @Header("Content-Type") String contentType,
       @Body() ConfirmBookingRequest request);
+
+  @POST("client/timeRange")
+  Future<GetRangesResponse> getTimeRanges(
+      @Header("Content-Type") String contentType, @Body() GetRangesReq request);
 }

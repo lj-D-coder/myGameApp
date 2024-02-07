@@ -359,7 +359,7 @@ class _Api implements Api {
   }
 
   @override
-  Future<BookingResponse> confirmBooking(
+  Future<SimpleResponse> confirmBooking(
     String contentType,
     ConfirmBookingRequest request,
   ) async {
@@ -370,7 +370,7 @@ class _Api implements Api {
     final _data = <String, dynamic>{};
     _data.addAll(request.toJson());
     final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<BookingResponse>(Options(
+        .fetch<Map<String, dynamic>>(_setStreamType<SimpleResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -387,7 +387,40 @@ class _Api implements Api {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = BookingResponse.fromJson(_result.data!);
+    final value = SimpleResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<GetRangesResponse> getTimeRanges(
+    String contentType,
+    GetRangesReq request,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<GetRangesResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              'client/timeRange',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = GetRangesResponse.fromJson(_result.data!);
     return value;
   }
 

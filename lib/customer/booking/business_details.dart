@@ -79,8 +79,8 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                     const Divider(
                       height: 5,
                       thickness: 5,
-                      indent: 120,
-                      endIndent: 120,
+                      indent: 160,
+                      endIndent: 160,
                     ),
                     Container(
                       height: 150,
@@ -107,7 +107,7 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                                         .businessData!
                                         .businessInfo!
                                         .bannerUrl ??
-                                    "https://media.hudle.in/venues/2eb223fa-f9f5-4f64-a73c-40986bb91442/photo/d6d08022281596c32755ac999fa26fb9c6af2f4c",
+                                    "https://editorial.uefa.com/resources/025c-0f8e775cc072-f99f8b3389ab-1000/the_new_tottenham_hotspur_stadium_has_an_unusual_flexible_playing_surface.jpeg",
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -125,25 +125,25 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                         color: const Color.fromARGB(255, 49, 63, 91),
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              alignment: Alignment.center,
-                              margin: const EdgeInsets.all(5),
-                              height: 50,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(80),
-                                color: Colors.black38,
-                              ),
-                              child: const Text(
-                                "Info",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
+                          // GestureDetector(
+                          //   onTap: () {},
+                          //   child: Container(
+                          //     alignment: Alignment.center,
+                          //     margin: const EdgeInsets.all(5),
+                          //     height: 50,
+                          //     width: 100,
+                          //     decoration: BoxDecoration(
+                          //       borderRadius: BorderRadius.circular(80),
+                          //       color: Colors.black38,
+                          //     ),
+                          //     child: const Text(
+                          //       "Info",
+                          //       style: TextStyle(fontWeight: FontWeight.bold),
+                          //     ),
+                          //   ),
+                          // ),
                           InkWell(
                             onTap: () {
                               Get.to(() => const LineUp(),

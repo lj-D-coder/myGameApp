@@ -118,12 +118,12 @@ class _HomeFeedState extends State<HomeFeed> {
                       ),
                       child: InkWell(
                         onTap: () {
-                          Get.to(() => BusinessDetails());
+                          Get.to(() => const BusinessDetails());
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
                           child: Image.network(
-                            "https://media.hudle.in/venues/2eb223fa-f9f5-4f64-a73c-40986bb91442/photo/d6d08022281596c32755ac999fa26fb9c6af2f4c",
+                            "https://editorial.uefa.com/resources/025c-0f8e775cc072-f99f8b3389ab-1000/the_new_tottenham_hotspur_stadium_has_an_unusual_flexible_playing_surface.jpeg",
                             fit: BoxFit.cover,
                           ),
                         ),
