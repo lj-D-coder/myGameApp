@@ -199,108 +199,108 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
       paymentInfo.discount = 0;
       request.paymentInfo = paymentInfo;
       List<String> userNames = [];
-      if (_selectedBookingType == Constants.INDIVIDUAL) {
-        Map<int, String> playerNames = {};
-        playerNames.addAll({0: userData["data"]["userName"]});
-        if (_bookingController.qty.value > 1) {
-          await showModalBottomSheet(
-              backgroundColor: Theme.of(context).primaryColor,
-              context: context,
-              isScrollControlled: true,
-              builder: (ctx) {
-                return SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: MediaQuery.of(context).viewInsets.bottom),
-                    child: Column(
-                      children: [
-                        const Text(
-                          "Please fill the player names",
-                          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                        ),
-                        for (var i = 0; i < _bookingController.qty.value; i++)
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              onChanged: (value) {
-                                if (playerNames.containsKey(i)) {
-                                  playerNames.update(i, (v) => value);
-                                } else {
-                                  playerNames.addAll({i: value});
-                                }
-                              },
-                              decoration: InputDecoration(hintText: i == 0 ? userData["data"]["userName"] : "Player name", hintStyle: const TextStyle(color: Colors.white)),
-                            ),
-                          ),
-                        Row(
-                          children: [
-                            const Spacer(),
-                            TextButton(
-                                onPressed: () {
-                                  for (var i = 0; i < _bookingController.qty.value; i++) {
-                                    userNames.add(userData["data"]["userName"]);
-                                  }
-                                  print(userNames);
-                                  Get.back();
-                                },
-                                child: const Text(
-                                  "Skip",
-                                  style: TextStyle(color: Colors.white),
-                                )),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            TextButton(
-                                onPressed: () {
-                                  for (var i = 0; i < playerNames.values.toList().length; i++) {
-                                    userNames.add(playerNames.values.toList()[i]);
-                                  }
-                                  var diff = _bookingController.qty.value - playerNames.values.toList().length;
-                                  for (var i = 0; i < diff; i++) {
-                                    userNames.add(userData["data"]["userName"]);
-                                  }
-                                  print(userNames);
-                                  Get.back();
-                                },
-                                child: const Text(
-                                  "SAVE",
-                                  style: TextStyle(color: Colors.white),
-                                ))
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              });
-          if (userNames.isNotEmpty) {
-            request.userName = userNames;
-            _bookingController.makeBooking(request).then((value) {
-              options = rzpOptions(userData);
-              _razorpay.open(options);
-            }).onError((error, stackTrace) {
-              showSnackBar(context, "Something went wrong");
-            });
-          }
-        } else {
-          userNames.add(userData["data"]["userName"]);
-          request.userName = userNames;
-          _bookingController.makeBooking(request).then((value) {
-            options = rzpOptions(userData);
-            _razorpay.open(options);
-          }).onError((error, stackTrace) {
-            showSnackBar(context, "Something went wrong");
-          });
-        }
-      } else {
-        userNames.add(userData["data"]["userName"]);
-        request.userName = userNames;
-        _bookingController.makeBooking(request).then((value) {
-          options = rzpOptions(userData);
-          _razorpay.open(options);
-        }).onError((error, stackTrace) {
-          showSnackBar(context, "Something went wrong");
-        });
-      }
+      // if (_selectedBookingType == Constants.INDIVIDUAL) {
+      //   Map<int, String> playerNames = {};
+      //   playerNames.addAll({0: userData["data"]["userName"]});
+      //   if (_bookingController.qty.value > 1) {
+      //     await showModalBottomSheet(
+      //         backgroundColor: Theme.of(context).primaryColor,
+      //         context: context,
+      //         isScrollControlled: true,
+      //         builder: (ctx) {
+      //           return SingleChildScrollView(
+      //             child: Padding(
+      //               padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: MediaQuery.of(context).viewInsets.bottom),
+      //               child: Column(
+      //                 children: [
+      //                   const Text(
+      //                     "Please fill the player names",
+      //                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+      //                   ),
+      //                   for (var i = 0; i < _bookingController.qty.value; i++)
+      //                     Padding(
+      //                       padding: const EdgeInsets.all(8.0),
+      //                       child: TextFormField(
+      //                         onChanged: (value) {
+      //                           if (playerNames.containsKey(i)) {
+      //                             playerNames.update(i, (v) => value);
+      //                           } else {
+      //                             playerNames.addAll({i: value});
+      //                           }
+      //                         },
+      //                         decoration: InputDecoration(hintText: i == 0 ? userData["data"]["userName"] : "Player name", hintStyle: const TextStyle(color: Colors.white)),
+      //                       ),
+      //                     ),
+      //                   Row(
+      //                     children: [
+      //                       const Spacer(),
+      //                       TextButton(
+      //                           onPressed: () {
+      //                             for (var i = 0; i < _bookingController.qty.value; i++) {
+      //                               userNames.add(userData["data"]["userName"]);
+      //                             }
+      //                             print(userNames);
+      //                             Get.back();
+      //                           },
+      //                           child: const Text(
+      //                             "Skip",
+      //                             style: TextStyle(color: Colors.white),
+      //                           )),
+      //                       const SizedBox(
+      //                         width: 20,
+      //                       ),
+      //                       TextButton(
+      //                           onPressed: () {
+      //                             for (var i = 0; i < playerNames.values.toList().length; i++) {
+      //                               userNames.add(playerNames.values.toList()[i]);
+      //                             }
+      //                             var diff = _bookingController.qty.value - playerNames.values.toList().length;
+      //                             for (var i = 0; i < diff; i++) {
+      //                               userNames.add(userData["data"]["userName"]);
+      //                             }
+      //                             print(userNames);
+      //                             Get.back();
+      //                           },
+      //                           child: const Text(
+      //                             "SAVE",
+      //                             style: TextStyle(color: Colors.white),
+      //                           ))
+      //                     ],
+      //                   )
+      //                 ],
+      //               ),
+      //             ),
+      //           );
+      //         });
+      //     if (userNames.isNotEmpty) {
+      //       request.userName = userNames;
+      //       _bookingController.makeBooking(request).then((value) {
+      //         options = rzpOptions(userData);
+      //         _razorpay.open(options);
+      //       }).onError((error, stackTrace) {
+      //         showSnackBar(context, "Something went wrong");
+      //       });
+      //     }
+      //   } else {
+      //     userNames.add(userData["data"]["userName"]);
+      //     request.userName = userNames;
+      //     _bookingController.makeBooking(request).then((value) {
+      //       options = rzpOptions(userData);
+      //       _razorpay.open(options);
+      //     }).onError((error, stackTrace) {
+      //       showSnackBar(context, "Something went wrong");
+      //     });
+      //   }
+      // } else {
+      userNames.add(userData["data"]["userName"]);
+      request.userName = userNames;
+      _bookingController.makeBooking(request).then((value) {
+        options = rzpOptions(userData);
+        _razorpay.open(options);
+      }).onError((error, stackTrace) {
+        showSnackBar(context, "Something went wrong");
+      });
+      // }
     } else {
       showSnackBar(context, "Please select all the required fields");
     }
@@ -347,6 +347,23 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
     } else {
       return true;
     }
+  }
+
+  String convert24to12(time24Hour) {
+    // Split the time into hours and minutes
+    List<String> parts = time24Hour.split(":");
+    int hour = int.parse(parts[0]);
+    int minute = int.parse(parts[1]);
+
+    // Convert to 12-hour format
+    String suffix = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12;
+    hour = hour == 0 ? 12 : hour; // Handle 0 as 12
+
+    // Format the time
+    String time12Hour = '$hour:${minute.toString().padLeft(2, '0')} $suffix';
+
+    return time12Hour;
   }
 
   @override
@@ -409,6 +426,9 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
                             }
                           },
                           onPageChanged: (date) {
+                            if (date.isBefore(DateTime.now())) {
+                              userSelectedDay = DateTime.parse("${userSelectedDay.toString().split(" ").first} 00:00:00.000Z");
+                            }
                             userSelectedDay = date;
                             getRangesReq.businessID = _bookingController.singleBusinessInfo.businessData!.businessID;
                             getRangesReq.date = userSelectedDay.toString().split(" ").first;
@@ -451,10 +471,11 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  "$index:00",
+                                                  convert24to12("$index:00"),
+                                                  style: const TextStyle(fontSize: 13),
                                                 ),
                                                 Padding(
-                                                  padding: const EdgeInsets.only(right: 59),
+                                                  padding: const EdgeInsets.only(right: 60),
                                                   child: Container(
                                                     height: 12,
                                                     width: 3,
@@ -463,7 +484,7 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
                                                 ),
                                               ],
                                             ),
-                                            index != 24 ? Container(height: 3, width: 60, color: occupiedDays.containsKey((index < 10 ? "0${index}" : "${index}")) ? Colors.red : Colors.white) : Container(height: 3, width: 60, color: occupiedDays.containsKey((index < 10 ? "0${index}" : "${index}")) ? Colors.red : Colors.white)
+                                            index != 24 ? Container(height: 3, width: 70, color: occupiedDays.containsKey((index < 10 ? "0${index}" : "${index}")) ? Colors.red : Colors.white) : Container(height: 3, width: 60, color: occupiedDays.containsKey((index < 10 ? "0${index}" : "${index}")) ? Colors.red : Colors.white)
                                           ],
                                         );
                                       }),
@@ -586,82 +607,82 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
                       thickness: 1,
                       color: Colors.grey.shade700,
                     ),
-                    if (_selectedBookingType == Constants.INDIVIDUAL)
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    if (_selectedBookingType == Constants.INDIVIDUAL)
-                      Row(
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(left: 20.0),
-                            child: Column(
-                              children: [
-                                Text(
-                                  "No. of Person",
-                                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                                ),
-                                Text("Add teamates(optional)")
-                              ],
-                            ),
-                          ),
-                          const Spacer(),
-                          Container(
-                            margin: const EdgeInsets.only(right: 15),
-                            alignment: Alignment.center,
-                            width: 120,
-                            height: 50,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.white)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Wrapped in a larger InkWell
-                                InkWell(
-                                  onTap: () {
-                                    if (_bookingController.qty > 1) {
-                                      _bookingController.qty = _bookingController.qty - 1;
-                                    }
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5), // Adjust the padding as needed
-                                    child: const Icon(Icons.remove),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Obx(
-                                  () => Text(
-                                    _bookingController.qty.toString(),
-                                    style: const TextStyle(fontSize: 20),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                // Wrapped in a larger InkWell
-                                InkWell(
-                                  onTap: () {
-                                    if (_bookingController.qty < _bookingController.singleBusinessInfo.businessData!.slot!.playerPerSide! * 2) {
-                                      _bookingController.qty = _bookingController.qty + 1;
-                                    }
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5), // Adjust the padding as needed
-                                    child: const Icon(Icons.add),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    if (_selectedBookingType == Constants.INDIVIDUAL)
-                      Divider(
-                        height: 50,
-                        thickness: 1,
-                        color: Colors.grey.shade700,
-                      ),
-                    if (_selectedBookingType != Constants.INDIVIDUAL)
-                      const SizedBox(
-                        height: 20,
-                      ),
+                    const SizedBox(
+                      height: 20,
+                      //   ),
+                      // if (_selectedBookingType == Constants.INDIVIDUAL)
+                      //   Row(
+                      //     children: [
+                      //       const Padding(
+                      //         padding: EdgeInsets.only(left: 20.0),
+                      //         child: Column(
+                      //           children: [
+                      //             Text(
+                      //               "No. of Person",
+                      //               style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                      //             ),
+                      //             // Text("Add teamates(optional)")
+                      //           ],
+                      //         ),
+                      //       ),
+                      //       const Spacer(),
+                      //       Container(
+                      //         margin: const EdgeInsets.only(right: 15),
+                      //         alignment: Alignment.center,
+                      //         width: 120,
+                      //         height: 50,
+                      //         decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.white)),
+                      //         child: Row(
+                      //           mainAxisAlignment: MainAxisAlignment.center,
+                      //           children: [
+                      //             // Wrapped in a larger InkWell
+                      //             // InkWell(
+                      //             //   onTap: () {
+                      //             //     if (_bookingController.qty > 1) {
+                      //             //       _bookingController.qty = _bookingController.qty - 1;
+                      //             //     }
+                      //             //   },
+                      //             //   child: Container(
+                      //             //     padding: const EdgeInsets.all(5), // Adjust the padding as needed
+                      //             //     child: const Icon(Icons.remove),
+                      //             //   ),
+                      //             // ),
+                      //             const SizedBox(width: 10),
+                      //             Obx(
+                      //               () => Text(
+                      //                 _bookingController.qty.toString(),
+                      //                 style: const TextStyle(fontSize: 20),
+                      //               ),
+                      //             ),
+                      //             const SizedBox(width: 10),
+                      //             // Wrapped in a larger InkWell
+                      //             // InkWell(
+                      //             //   onTap: () {
+                      //             //     if (_bookingController.qty < _bookingController.singleBusinessInfo.businessData!.slot!.playerPerSide! * 2) {
+                      //             //       _bookingController.qty = _bookingController.qty + 1;
+                      //             //     }
+                      //             //   },
+                      //             //   child: Container(
+                      //             //     padding: const EdgeInsets.all(5), // Adjust the padding as needed
+                      //             //     child: const Icon(Icons.add),
+                      //             //   ),
+                      //             // ),
+                      //           ],
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // if (_selectedBookingType == Constants.INDIVIDUAL)
+                      //   Divider(
+                      //     height: 50,
+                      //     thickness: 1,
+                      //     color: Colors.grey.shade700,
+                      //   ),
+                      // if (_selectedBookingType != Constants.INDIVIDUAL)
+                      //   const SizedBox(
+                      //     height: 20,
+                      //   ),
+                    ),
                     const Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(
@@ -690,7 +711,7 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
                                   iconSize: 24,
                                   elevation: 16,
                                   hint: const Text(
-                                    "Select your Slot",
+                                    "Select Slot  (Eg:- 9:00 AM - 10 AM)",
                                     style: TextStyle(color: Colors.white),
                                   ),
                                   style: const TextStyle(color: Colors.white),
@@ -873,7 +894,7 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
                               ignoring: true,
                               child: Padding(
                                 padding: const EdgeInsets.all(15.0),
-                                child: TextFormField(decoration: InputDecoration(hintText: "Select your Slot", hintStyle: TextStyle(color: Colors.white, fontSize: 13), border: OutlineInputBorder(borderRadius: BorderRadius.circular(5), borderSide: BorderSide(color: Colors.grey.shade700, width: 1))), controller: _multiSlotTextEditingController),
+                                child: TextFormField(decoration: InputDecoration(hintText: "Select Slot  (Eg:- 9:00 AM - 10 AM)", hintStyle: TextStyle(color: Colors.white, fontSize: 13), border: OutlineInputBorder(borderRadius: BorderRadius.circular(5), borderSide: BorderSide(color: Colors.grey.shade700, width: 1))), controller: _multiSlotTextEditingController),
                               ),
                             ),
                           ),
