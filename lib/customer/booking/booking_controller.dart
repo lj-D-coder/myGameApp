@@ -25,7 +25,8 @@ class BookingController extends GetxController {
   RxString confirmBookingStatus = "".obs;
   GetRangesResponse getRangesResponse = GetRangesResponse();
 
-  RxInt price = 0.obs;
+  RxDouble price = 0.0.obs;
+  RxDouble fieldPrice = 0.0.obs;
   RxInt qty = 1.obs;
   int? selectedDay;
 
@@ -34,8 +35,7 @@ class BookingController extends GetxController {
     confirmBookingStatus.value = "";
     box = GetStorage();
     dio = Dio();
-    dio!.interceptors
-        .add(LogInterceptor(requestBody: true, responseBody: true));
+    dio!.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
     otpService = OtpService(dio!);
     apiService = Api(dio!);
     price.value = 0;
@@ -46,8 +46,7 @@ class BookingController extends GetxController {
   }
 
   void getRanges() {
-    Map<String, dynamic> businessHours =
-        singleBusinessInfo.businessData!.businessHours!.toJson();
+    Map<String, dynamic> businessHours = singleBusinessInfo.businessData!.businessHours!.toJson();
 
     Map<String, dynamic> slot = {
       "gameLength": 60,
@@ -58,8 +57,7 @@ class BookingController extends GetxController {
     print(timeRanges);
   }
 
-  List<String> generateTimeRanges(
-      Map<String, dynamic> businessHours, Map<String, dynamic> slot) {
+  List<String> generateTimeRanges(Map<String, dynamic> businessHours, Map<String, dynamic> slot) {
     String openTime = businessHours["openTime"];
     String closeTime = businessHours["closeTime"];
     int gameLength = slot["gameLength"];
@@ -71,8 +69,7 @@ class BookingController extends GetxController {
 
     while (startTime.add(Duration(minutes: gameLength)).isBefore(endTime)) {
       String startTimeString = formatTime(startTime);
-      String endTimeString =
-          formatTime(startTime.add(Duration(minutes: gameLength)));
+      String endTimeString = formatTime(startTime.add(Duration(minutes: gameLength)));
 
       timeRanges.add("$startTimeString - $endTimeString");
       startTime = startTime.add(Duration(minutes: gameLength));
@@ -91,15 +88,14 @@ class BookingController extends GetxController {
     return timeFormat.format(time);
   }
 
-  Future<void> getBusinessDetails() async {
+  Future<void> getBusinessDetails(businessId) async {
     try {
-      final data = await apiService.getBusinessInfo(
-          "application/json", "65bbb352f5f90fa337eeb5b4");
+      final data = await apiService.getBusinessInfo("application/json", businessId);
       if (data.status == 200) {
         singleBusinessInfo = data.data;
         businessDeatilsLoaded.value = true;
-        price.value = int.parse(
-            singleBusinessInfo.pricingData!.price!.individual!.price!);
+        price.value = double.parse(singleBusinessInfo.pricingData!.price!.individual!.price!);
+        fieldPrice.value = double.parse(singleBusinessInfo.pricingData!.price!.field!.price!);
       }
     } catch (err) {
       throw err;
@@ -108,11 +104,29 @@ class BookingController extends GetxController {
 
   Future<void> getTimeRanges(req, [showLoader]) async {
     try {
-      if (showLoader != null) {
+      if (showLoader != null && showLoader == true) {
         showDialog();
       }
       final data = await apiService.getTimeRanges("application/json", req);
-      if (showLoader != null) {
+      if (showLoader != null && showLoader == true) {
+        closeDialog();
+      }
+      if (data.status == 200) {
+        getRangesResponse = data;
+        getRangesLoaded.value = true;
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  Future<void> getTimeRangesPlaygroud(req, [showLoader]) async {
+    try {
+      if (showLoader != null && showLoader == true) {
+        showDialog();
+      }
+      final data = await apiService.getTimeRangesPlayground("application/json", req);
+      if (showLoader != null && showLoader == true) {
         closeDialog();
       }
       if (data.status == 200) {
@@ -125,8 +139,7 @@ class BookingController extends GetxController {
   }
 
   void setFieldPrice() {
-    price.value =
-        int.parse(singleBusinessInfo.pricingData!.price!.field!.price!);
+    price.value = double.parse(singleBusinessInfo.pricingData!.price!.field!.price!);
   }
 
   Future<void> makeBooking(req) async {
@@ -152,6 +165,16 @@ class BookingController extends GetxController {
       }
     } catch (err) {
       confirmBookingStatus.value = "failed";
+      throw err;
+    }
+  }
+
+  Future<void> droppedBooking(request) async {
+    try {
+      final data = await apiService.droppedBooking("application/json", request);
+      if (data.message == "Success") {
+      } else {}
+    } catch (err) {
       throw err;
     }
   }

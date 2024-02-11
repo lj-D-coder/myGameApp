@@ -16,7 +16,7 @@ class _BusinessDetailsState extends State<BusinessDetails> {
   final BookingController _bookingController = Get.find();
   @override
   void initState() {
-    _bookingController.getBusinessDetails();
+    _bookingController.getBusinessDetails("65bbb352f5f90fa337eeb5b4");
     super.initState();
   }
 
@@ -48,18 +48,12 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                           Column(
                             children: [
                               Text(
-                                _bookingController.singleBusinessInfo
-                                        .businessData!.businessInfo!.name ??
-                                    "",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 20),
+                                _bookingController.singleBusinessInfo.businessData!.businessInfo!.name ?? "",
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                               ),
                               Text(
-                                _bookingController.singleBusinessInfo
-                                        .businessData!.businessInfo!.name ??
-                                    "",
-                                style: TextStyle(
-                                    fontSize: 14, color: Colors.grey.shade400),
+                                _bookingController.singleBusinessInfo.businessData!.businessInfo!.name ?? "",
+                                style: TextStyle(fontSize: 14, color: Colors.grey.shade400),
                               )
                             ],
                           ),
@@ -102,12 +96,7 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(5),
                               child: Image.network(
-                                _bookingController
-                                        .singleBusinessInfo
-                                        .businessData!
-                                        .businessInfo!
-                                        .bannerUrl ??
-                                    "https://editorial.uefa.com/resources/025c-0f8e775cc072-f99f8b3389ab-1000/the_new_tottenham_hotspur_stadium_has_an_unusual_flexible_playing_surface.jpeg",
+                                _bookingController.singleBusinessInfo.businessData!.businessInfo!.bannerUrl ?? "https://editorial.uefa.com/resources/025c-0f8e775cc072-f99f8b3389ab-1000/the_new_tottenham_hotspur_stadium_has_an_unusual_flexible_playing_surface.jpeg",
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -146,8 +135,7 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                           // ),
                           InkWell(
                             onTap: () {
-                              Get.to(() => const LineUp(),
-                                  transition: Transition.downToUp);
+                              Get.to(() => const LineUp(), transition: Transition.downToUp);
                             },
                             child: Container(
                               alignment: Alignment.center,
@@ -196,8 +184,7 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: SizedBox(
                                       height: 50,
-                                      width: MediaQuery.of(context).size.width *
-                                          .85,
+                                      width: MediaQuery.of(context).size.width * .85,
                                       child: const Row(
                                         children: [
                                           CircleAvatar(
@@ -205,10 +192,7 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                                           ),
                                           Spacer(),
                                           Column(
-                                            children: [
-                                              Text("Heading"),
-                                              Text("SubHeading")
-                                            ],
+                                            children: [Text("Heading"), Text("SubHeading")],
                                           ),
                                           Spacer(),
                                           Icon(Icons.more_vert)
@@ -218,23 +202,19 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                                   ),
                                   const Padding(
                                     padding: EdgeInsets.all(20.0),
-                                    child: Text(
-                                        "Lorem Ipsum is simply dummy text os text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."),
+                                    child: Text("Lorem Ipsum is simply dummy text os text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."),
                                   ),
                                   ElevatedButton(
                                     style: ButtonStyle(
                                       backgroundColor: MaterialStatePropertyAll(
-                                        Colors.grey.withOpacity(
-                                            0.5), // Semi-transparent grey color
+                                        Colors.grey.withOpacity(0.5), // Semi-transparent grey color
                                       ),
                                       overlayColor: MaterialStatePropertyAll(
-                                        Colors.white.withOpacity(
-                                            0.2), // Color when pressed
+                                        Colors.white.withOpacity(0.2), // Color when pressed
                                       ),
                                       shape: MaterialStatePropertyAll(
                                         RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(16.0),
+                                          borderRadius: BorderRadius.circular(16.0),
                                         ),
                                       ),
                                     ),
@@ -242,24 +222,20 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                                       Get.to(() => TimeSelection());
                                     },
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16.0, vertical: 8.0),
+                                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           const Text(
                                             "Book",
-                                            style:
-                                                TextStyle(color: Colors.white),
+                                            style: TextStyle(color: Colors.white),
                                           ),
                                           const SizedBox(width: 10),
                                           Container(
                                             decoration: BoxDecoration(
                                               boxShadow: [
                                                 BoxShadow(
-                                                  color: Colors.green
-                                                      .withOpacity(
-                                                          0.8), // Glow color
+                                                  color: Colors.green.withOpacity(0.8), // Glow color
                                                   blurRadius: 8.0,
                                                   spreadRadius: 2.0,
                                                 ),
@@ -267,8 +243,7 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                                             ),
                                             child: Image.asset(
                                               "assets/images/arrowGreen.png",
-                                              height:
-                                                  24, // Adjust the height as needed
+                                              height: 24, // Adjust the height as needed
                                             ),
                                           ),
                                         ],

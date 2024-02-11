@@ -2,7 +2,7 @@ class BookingRequest {
   String? userId;
   List<String>? userName;
   String? businessID;
-  String? matchId;
+  int? noOfSlot;
   String? date;
   String? startTime;
   String? endTime;
@@ -10,31 +10,19 @@ class BookingRequest {
   String? sideChoose;
   PaymentInfo? paymentInfo;
 
-  BookingRequest(
-      {this.userId,
-      this.userName,
-      this.businessID,
-      this.matchId,
-      this.date,
-      this.startTime,
-      this.endTime,
-      this.bookingType,
-      this.sideChoose,
-      this.paymentInfo});
+  BookingRequest({this.userId, this.userName, this.businessID, this.noOfSlot, this.date, this.startTime, this.endTime, this.bookingType, this.sideChoose, this.paymentInfo});
 
   BookingRequest.fromJson(Map<String, dynamic> json) {
     userId = json['userId'];
     userName = json['UserName'].cast<String>();
     businessID = json['businessID'];
-    matchId = json['matchId'];
+    noOfSlot = json['noOfSlot'];
     date = json['date'];
     startTime = json['startTime'];
     endTime = json['endTime'];
     bookingType = json['bookingType'];
     sideChoose = json['sideChoose'];
-    paymentInfo = json['paymentInfo'] != null
-        ? new PaymentInfo.fromJson(json['paymentInfo'])
-        : null;
+    paymentInfo = json['paymentInfo'] != null ? new PaymentInfo.fromJson(json['paymentInfo']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -42,7 +30,7 @@ class BookingRequest {
     data['userId'] = this.userId;
     data['UserName'] = this.userName;
     data['businessID'] = this.businessID;
-    data['matchId'] = this.matchId;
+    data['noOfSlot'] = this.noOfSlot;
     data['date'] = this.date;
     data['startTime'] = this.startTime;
     data['endTime'] = this.endTime;
@@ -64,14 +52,7 @@ class PaymentInfo {
   String? paymentMode;
   String? paymentStatus;
 
-  PaymentInfo(
-      {this.quantity,
-      this.discount,
-      this.amountPaid,
-      this.couponId,
-      this.paymentId,
-      this.paymentMode,
-      this.paymentStatus});
+  PaymentInfo({this.quantity, this.discount, this.amountPaid, this.couponId, this.paymentId, this.paymentMode, this.paymentStatus});
 
   PaymentInfo.fromJson(Map<String, dynamic> json) {
     quantity = json['quantity'];
