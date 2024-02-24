@@ -166,7 +166,7 @@ class BookingController extends GetxController {
   Future<void> confirmBooking(request) async {
     try {
       final data = await apiService.confirmBooking("application/json", request);
-      if (data.status == 200) {
+      if (data.message == "Success") {
         confirmBookingStatus.value = "success";
       } else {
         confirmBookingStatus.value = "failed";
