@@ -12,8 +12,7 @@ class PaymentSuccessfulPage extends StatefulWidget {
   State<PaymentSuccessfulPage> createState() => _PaymentSuccessfulPageState();
 }
 
-class _PaymentSuccessfulPageState extends State<PaymentSuccessfulPage>
-    with TickerProviderStateMixin {
+class _PaymentSuccessfulPageState extends State<PaymentSuccessfulPage> with TickerProviderStateMixin {
   late AnimationController _tickAnimationController;
   final BookingController _bookingController = Get.find();
   final ConfirmBookingRequest confirmBookingRequest = ConfirmBookingRequest();
@@ -28,8 +27,7 @@ class _PaymentSuccessfulPageState extends State<PaymentSuccessfulPage>
       lowerBound: 0.8,
     );
 
-    confirmBookingRequest.bookingId =
-        _bookingController.bookingResponse.bookingId;
+    confirmBookingRequest.bookingId = _bookingController.bookingResponse.bookingId;
     _bookingController.confirmBooking(confirmBookingRequest).then((value) {
       _tickAnimationController.forward();
     });
@@ -62,9 +60,7 @@ class _PaymentSuccessfulPageState extends State<PaymentSuccessfulPage>
                         children: [
                           ScaleTransition(
                               scale: _tickAnimationController,
-                              child: _bookingController
-                                          .confirmBookingStatus.value ==
-                                      "success"
+                              child: _bookingController.confirmBookingStatus.value == "success"
                                   ? const Icon(
                                       Icons.check_circle,
                                       color: Colors.green,
@@ -76,33 +72,25 @@ class _PaymentSuccessfulPageState extends State<PaymentSuccessfulPage>
                                       size: 150,
                                     )),
                           const SizedBox(height: 20),
-                          _bookingController.confirmBookingStatus.value ==
-                                  "success"
+                          _bookingController.confirmBookingStatus.value == "success"
                               ? const Text(
                                   'Payment Successful',
-                                  style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                                 )
                               : const Text(
                                   "Payment Failed",
-                                  style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                                 ),
-                          const SizedBox(height: 20),
-                          _bookingController.confirmBookingStatus.value ==
-                                  "success"
+                          const SizedBox(height: 5),
+                          _bookingController.confirmBookingStatus.value == "success"
                               ? const Text(
                                   'Your payment was processed successfully!',
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.grey),
+                                  style: TextStyle(fontSize: 16, color: Colors.grey),
                                   textAlign: TextAlign.center,
                                 )
                               : const Text(
                                   'Your payment has failed.\n Please contact customer care',
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.red),
+                                  style: TextStyle(fontSize: 16, color: Colors.red),
                                   textAlign: TextAlign.center,
                                 ),
                         ],

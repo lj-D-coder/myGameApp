@@ -7,6 +7,8 @@ import 'package:mygame/api/api.dart';
 import 'package:mygame/api/otp_service.dart';
 import 'package:mygame/models/res/booking_response.dart';
 import 'package:mygame/models/res/get_ranges_response.dart';
+import 'package:mygame/models/res/home_feed_response.dart';
+import 'package:mygame/models/res/match_details.dart';
 import 'package:mygame/models/res/single_biz_info.dart';
 import 'package:mygame/utils/loading.dart';
 
@@ -24,6 +26,11 @@ class BookingController extends GetxController {
   BookingResponse bookingResponse = BookingResponse();
   RxString confirmBookingStatus = "".obs;
   GetRangesResponse getRangesResponse = GetRangesResponse();
+  HomeFeedResponse homeFeedResponse = HomeFeedResponse();
+  RxList<NearbyGround> nearbyGround = <NearbyGround>[].obs;
+  RxList<Matches> matches = <Matches>[].obs;
+  RxList allMatchesUnderBiz = [].obs;
+  var singleMatchDetails = MatchDetailResponse().obs;
 
   RxDouble price = 0.0.obs;
   RxDouble fieldPrice = 0.0.obs;
@@ -40,8 +47,8 @@ class BookingController extends GetxController {
     apiService = Api(dio!);
     price.value = 0;
     qty.value = 1;
-
     context = Get.context;
+
     super.onInit();
   }
 
@@ -89,6 +96,7 @@ class BookingController extends GetxController {
   }
 
   Future<void> getBusinessDetails(businessId) async {
+    businessDeatilsLoaded.value = false;
     try {
       final data = await apiService.getBusinessInfo("application/json", businessId);
       if (data.status == 200) {
@@ -158,7 +166,7 @@ class BookingController extends GetxController {
   Future<void> confirmBooking(request) async {
     try {
       final data = await apiService.confirmBooking("application/json", request);
-      if (data.message == "Success") {
+      if (data.status == 200) {
         confirmBookingStatus.value = "success";
       } else {
         confirmBookingStatus.value = "failed";
@@ -172,7 +180,43 @@ class BookingController extends GetxController {
   Future<void> droppedBooking(request) async {
     try {
       final data = await apiService.droppedBooking("application/json", request);
-      if (data.message == "Success") {
+      if (data.status == 200) {
+      } else {}
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  Future<void> homeFeed(request) async {
+    try {
+      final data = await apiService.homeFeed("application/json", request);
+      if (data.status == 200) {
+        homeFeedResponse = data;
+        nearbyGround.value = data.nearbyGround ?? [];
+        matches.value = data.matches ?? [];
+      } else {}
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  Future<void> getAllMatchesUnderBusiness(id) async {
+    try {
+      final data = await apiService.getAllMatchesUnderBusiness("application/json", id);
+      if (data.status == 200) {
+        allMatchesUnderBiz.value = data.data ?? [];
+      } else {}
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  Future<void> gertMatchDetails(id) async {
+    try {
+      singleMatchDetails.value.data = null;
+      final data = await apiService.getMatchDetails("application/json", id);
+      if (data.status == 200) {
+        singleMatchDetails.value = data;
       } else {}
     } catch (err) {
       throw err;

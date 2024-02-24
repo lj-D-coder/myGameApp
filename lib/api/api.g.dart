@@ -25,7 +25,7 @@ class _Api implements Api {
     String contentType,
     SignUpRequest request,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': contentType};
     _headers.removeWhere((k, v) => v == null);
@@ -58,7 +58,7 @@ class _Api implements Api {
     String contentType,
     AddBusinessModel request,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': contentType};
     _headers.removeWhere((k, v) => v == null);
@@ -88,11 +88,11 @@ class _Api implements Api {
 
   @override
   Future<AllBusinessInfoResponse> getAllBusiness(String contentType) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': contentType};
     _headers.removeWhere((k, v) => v == null);
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<AllBusinessInfoResponse>(Options(
       method: 'GET',
@@ -120,11 +120,11 @@ class _Api implements Api {
     String contentType,
     String id,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': contentType};
     _headers.removeWhere((k, v) => v == null);
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<GenericResponse<SingleBusinessInfo>>(Options(
       method: 'GET',
@@ -155,11 +155,11 @@ class _Api implements Api {
     String contentType,
     String id,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': contentType};
     _headers.removeWhere((k, v) => v == null);
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<SimpleResponse>(Options(
       method: 'DELETE',
@@ -188,7 +188,7 @@ class _Api implements Api {
     String id,
     AddBusinessModel request,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': contentType};
     _headers.removeWhere((k, v) => v == null);
@@ -222,7 +222,7 @@ class _Api implements Api {
     String id,
     BusinessData request,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': contentType};
     _headers.removeWhere((k, v) => v == null);
@@ -255,7 +255,7 @@ class _Api implements Api {
     String contentType,
     PricingRequest request,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': contentType};
     _headers.removeWhere((k, v) => v == null);
@@ -288,7 +288,7 @@ class _Api implements Api {
     String businessID,
     File file,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = FormData();
@@ -330,7 +330,7 @@ class _Api implements Api {
     String contentType,
     BookingRequest request,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': contentType};
     _headers.removeWhere((k, v) => v == null);
@@ -363,7 +363,7 @@ class _Api implements Api {
     String contentType,
     ConfirmBookingRequest request,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': contentType};
     _headers.removeWhere((k, v) => v == null);
@@ -396,7 +396,7 @@ class _Api implements Api {
     String contentType,
     GetRangesReq request,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': contentType};
     _headers.removeWhere((k, v) => v == null);
@@ -429,7 +429,7 @@ class _Api implements Api {
     String contentType,
     GetRangesReq request,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': contentType};
     _headers.removeWhere((k, v) => v == null);
@@ -462,7 +462,7 @@ class _Api implements Api {
     String contentType,
     BookingDropped request,
   ) async {
-    const _extra = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': contentType};
     _headers.removeWhere((k, v) => v == null);
@@ -487,6 +487,103 @@ class _Api implements Api {
               baseUrl,
             ))));
     final value = SimpleResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<HomeFeedResponse> homeFeed(
+    String contentType,
+    HomeFeedRequest request,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<HomeFeedResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              'location/nearby-ground',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = HomeFeedResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<AllMatchesResponse> getAllMatchesUnderBusiness(
+    String contentType,
+    dynamic id,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    _headers.removeWhere((k, v) => v == null);
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<AllMatchesResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              'business/matches/${id}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = AllMatchesResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<MatchDetailResponse> getMatchDetails(
+    String contentType,
+    dynamic id,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Content-Type': contentType};
+    _headers.removeWhere((k, v) => v == null);
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<MatchDetailResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: contentType,
+    )
+            .compose(
+              _dio.options,
+              'match/${id}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = MatchDetailResponse.fromJson(_result.data!);
     return value;
   }
 

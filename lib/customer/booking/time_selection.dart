@@ -13,6 +13,7 @@ import 'package:mygame/models/req/get_ranges_req.dart';
 import 'package:mygame/utils/constants.dart';
 import 'package:mygame/utils/snackbar.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:slider_button/slider_button.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -27,6 +28,8 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
   final BookingController _bookingController = Get.find();
   DateTime? userSelectedDay = DateTime.now();
   final TextEditingController _multiSlotTextEditingController = TextEditingController();
+  final TextEditingController _singleSlotEditorController = TextEditingController();
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   StreamSubscription<QuerySnapshot>? subscription;
   GetRangesReq getRangesReq = GetRangesReq();
@@ -55,7 +58,7 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
   }
 
   void listenToDataChanges() {
-    subscription = _firestore.collection('matchesCollection').where('businessID').snapshots().listen((QuerySnapshot snapshot) {
+    subscription = _firestore.collection('matchesCollection').where('businessID', isEqualTo: "65c99dd285d2617298a680e3").snapshots().listen((QuerySnapshot snapshot) {
       getRangesReq.businessID = _bookingController.singleBusinessInfo.businessData!.businessID;
       getRangesReq.date = userSelectedDay.toString().split(" ").first;
       for (var change in snapshot.docChanges) {
@@ -75,7 +78,7 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
 
   Future<void> getAllMatches(timestamp) async {
     occupiedDays.clear();
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('matchesCollection').where('businessID', isEqualTo: "65bbb352f5f90fa337eeb5b4").where('matchDate', isEqualTo: timestamp).get();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('matchesCollection').where('businessID', isEqualTo: "65c99dd285d2617298a680e3").where('matchDate', isEqualTo: timestamp).get();
     for (var i = 0; i < querySnapshot.docs.length; i++) {
       print(querySnapshot.docs[i].data());
       occupiedDays.addAll({convertTimeStampT24(querySnapshot.docs[i].get("StartTimestamp")): convertTimeStampT24(querySnapshot.docs[i].get("EndTimestamp"))});
@@ -83,11 +86,13 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
     setState(() {});
   }
 
-  String convertTimeStampT24(timestamp) {
+  String convertTimeStampT24(int timestamp) {
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: true);
 
-    String formattedTime = _twoDigits(dateTime.hour);
-    return formattedTime;
+    String formattedHour = _twoDigits(dateTime.hour);
+    String formattedMinute = _twoDigits(dateTime.minute);
+
+    return '$formattedHour:$formattedMinute';
   }
 
   String _twoDigits(int n) {
@@ -161,7 +166,7 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
   }
 
   Future<void> makeBooking() async {
-    if (_selectedBookingType != null && ((_selectedValue != null) || (_selectedSlotValues.isNotEmpty))) {
+    if (_selectedBookingType != null && ((_singleSlotEditorController.text.isNotEmpty) || (_selectedSlotValues.isNotEmpty))) {
       Map<String, dynamic> options = {};
       GetStorage box = GetStorage();
       var userData = box.read('UserData');
@@ -176,7 +181,7 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
         request.endTime = convertTo24HourFormat(_selectedSlotValues.last.toString().split(" - ").last);
         request.noOfSlot = _selectedSlotValues.length;
       } else {
-        List<String> times = _selectedValue.split(" - ");
+        List<String> times = _singleSlotEditorController.text.split(" - ");
         request.startTime = convertTo24HourFormat(times[0]);
         request.endTime = convertTo24HourFormat(times[1]);
         request.noOfSlot = 1;
@@ -462,7 +467,7 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: List.generate(25, (index) {
+                                      children: List.generate(_bookingController.getRangesResponse.timeRanges!.length, (index) {
                                         return Column(
                                           mainAxisAlignment: MainAxisAlignment.end,
                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -470,21 +475,23 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text(
-                                                  convert24to12("$index:00"),
-                                                  style: const TextStyle(fontSize: 13),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets.only(right: 60),
-                                                  child: Container(
-                                                    height: 12,
-                                                    width: 3,
-                                                    color: Colors.green,
+                                                if (index % 2 != 0)
+                                                  Text(
+                                                    _bookingController.getRangesResponse.timeRanges![index - 1].split(" - ").first,
+                                                    style: const TextStyle(fontSize: 13),
                                                   ),
-                                                ),
+                                                if (index % 2 != 0)
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(right: 60),
+                                                    child: Container(
+                                                      height: 12,
+                                                      width: 3,
+                                                      color: Colors.green,
+                                                    ),
+                                                  ),
                                               ],
                                             ),
-                                            index != 24 ? Container(height: 3, width: 70, color: occupiedDays.containsKey((index < 10 ? "0${index}" : "${index}")) ? Colors.red : Colors.white) : Container(height: 3, width: 60, color: occupiedDays.containsKey((index < 10 ? "0${index}" : "${index}")) ? Colors.red : Colors.white)
+                                            if (index % 2 != 0) Container(height: 3, width: 60, color: occupiedDays.keys.contains(convertTo24HourFormat(_bookingController.getRangesResponse.timeRanges![index - 1].split(" - ")[0])) ? Colors.red : Colors.white)
                                           ],
                                         );
                                       }),
@@ -547,7 +554,7 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
                             ),
                           ),
                           const SizedBox(
-                            width: 20,
+                            width: 10,
                           ),
                           GestureDetector(
                             onTap: () {
@@ -581,19 +588,19 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
                           if (_selectedBookingType == Constants.INDIVIDUAL)
                             Obx(
                               () => Padding(
-                                  padding: const EdgeInsets.only(right: 5.0),
+                                  padding: const EdgeInsets.only(right: 3.0),
                                   child: Text(
                                     "\u20B9 ${_bookingController.price.value * _bookingController.qty.value}",
-                                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                   )),
                             ),
                           if (_selectedBookingType == Constants.PLAYGROUND)
                             Obx(
                               () => Padding(
-                                  padding: const EdgeInsets.only(right: 5.0),
+                                  padding: const EdgeInsets.only(right: 3.0),
                                   child: Text(
                                     "\u20B9 ${_bookingController.fieldPrice.value}",
-                                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                   )),
                             )
                         ],
@@ -693,71 +700,94 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
                           ),
                         )),
                     _selectedBookingType == Constants.INDIVIDUAL
-                        ? Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 60,
-                              padding: const EdgeInsets.all(16.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.0),
-                                border: Border.all(color: Colors.grey),
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<String>(
-                                  dropdownColor: Theme.of(context).primaryColor,
-                                  value: _selectedValue,
-                                  icon: const Icon(Icons.arrow_drop_down),
-                                  iconSize: 24,
-                                  elevation: 16,
-                                  hint: const Text(
-                                    "Select Slot  (Eg:- 9:00 AM - 10 AM)",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  style: const TextStyle(color: Colors.white),
-                                  onChanged: (newValue) {
-                                    if (_bookingController.getRangesResponse.timeRanges!.toJson()[newValue] == "close") {
-                                      showSnackBar(context, "This slot is fully booked, Please select another slot");
-                                    } else if (checkSlotAferCurentTime(newValue) == false) {
-                                      showSnackBar(context, "Cannot select past time slot, Please select another slot");
-                                    } else {
-                                      setState(() {
-                                        _selectedValue = newValue.toString();
-                                      });
-                                    }
-                                  },
-                                  items: _bookingController.getRangesResponse.timeRanges!
-                                      .toJson()
-                                      .keys
-                                      .toList()
-                                      .map<DropdownMenuItem<String>>(
-                                        (String value) => DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
+                        ? InkWell(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (ctx) {
+                                    return StatefulBuilder(
+                                      builder: (ctx, state) => Scaffold(
+                                        backgroundColor: Colors.transparent,
+                                        body: Center(
+                                          child: Stack(
                                             children: [
-                                              Text(value),
-                                              const SizedBox(
-                                                width: 30,
-                                              ),
                                               Container(
-                                                alignment: Alignment.center,
-                                                height: 25,
-                                                width: 60,
-                                                decoration: BoxDecoration(
-                                                  color: _bookingController.getRangesResponse.timeRanges!.toJson()[value]! == "close" ? Colors.red : Colors.green,
-                                                  borderRadius: BorderRadius.circular(5.0),
-                                                ),
-                                                child: Text(
-                                                  _bookingController.getRangesResponse.timeRanges!.toJson()[value]!,
-                                                ),
-                                              )
+                                                height: 600,
+                                                width: MediaQuery.of(context).size.width - 40,
+                                                color: Theme.of(context).primaryColor,
+                                                child: SingleChildScrollView(
+                                                    child: Padding(
+                                                  padding: const EdgeInsets.all(15.0),
+                                                  child: Column(
+                                                    children: [
+                                                      for (var i = 1; i <= _bookingController.getRangesResponse.timeRanges!.length; i++)
+                                                        if (i % 2 != 0)
+                                                          InkWell(
+                                                            onTap: () {
+                                                              if (_bookingController.getRangesResponse.timeRanges![i] == "close") {
+                                                                showSnackBar(context, "This slot is fully booked, Please select another slot");
+                                                              } else if (checkSlotAferCurentTime(_bookingController.getRangesResponse.timeRanges![i - 1]) == false) {
+                                                                showSnackBar(context, "Cannot select past time slot, Please select another slot");
+                                                              } else {
+                                                                _singleSlotEditorController.text = _bookingController.getRangesResponse.timeRanges![i - 1];
+                                                                state(() {});
+                                                                setState(() {});
+                                                                Get.back();
+                                                                state(() {});
+                                                              }
+                                                            },
+                                                            child: SizedBox(
+                                                                height: 50,
+                                                                width: MediaQuery.of(context).size.width - 40,
+                                                                child: Row(
+                                                                  children: [
+                                                                    SizedBox(
+                                                                      width: 150,
+                                                                      child: Text(
+                                                                        _bookingController.getRangesResponse.timeRanges![i - 1],
+                                                                      ),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      width: 20,
+                                                                    ),
+                                                                    if (i < _bookingController.getRangesResponse.timeRanges!.length)
+                                                                      Container(
+                                                                        alignment: Alignment.center,
+                                                                        height: 25,
+                                                                        width: 60,
+                                                                        decoration: BoxDecoration(
+                                                                          color: _bookingController.getRangesResponse.timeRanges![i] == "close" ? Colors.red : Colors.green,
+                                                                          borderRadius: BorderRadius.circular(5.0),
+                                                                        ),
+                                                                        child: Text(_bookingController.getRangesResponse.timeRanges![i]),
+                                                                      )
+                                                                  ],
+                                                                )),
+                                                          ),
+                                                    ],
+                                                  ),
+                                                )),
+                                              ),
+                                              Positioned(
+                                                  right: 10,
+                                                  top: 10,
+                                                  child: InkWell(
+                                                      onTap: () {
+                                                        Get.back();
+                                                      },
+                                                      child: const Icon(Icons.close, color: Colors.white, size: 30))),
                                             ],
                                           ),
                                         ),
-                                      )
-                                      .toList(),
-                                ),
+                                      ),
+                                    );
+                                  });
+                            },
+                            child: IgnorePointer(
+                              ignoring: true,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: TextFormField(decoration: InputDecoration(hintText: "Select Slot  (Eg:- 9:00 AM - 10 AM)", hintStyle: TextStyle(color: Colors.white, fontSize: 13), border: OutlineInputBorder(borderRadius: BorderRadius.circular(5), borderSide: BorderSide(color: Colors.grey.shade700, width: 1))), controller: _singleSlotEditorController),
                               ),
                             ),
                           )
@@ -782,68 +812,67 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
                                                   padding: const EdgeInsets.all(15.0),
                                                   child: Column(
                                                     children: [
-                                                      ..._bookingController.getRangesResponse.timeRanges!.toJson().keys.toList().map((e) {
-                                                        return InkWell(
-                                                          onTap: () {
-                                                            if (_bookingController.getRangesResponse.timeRanges!.toJson()[e] == "close") {
-                                                              showSnackBar(context, "This slot is fully booked, Please select another slot");
-                                                            } else if (checkSlotAferCurentTime(e) == false) {
-                                                              showSnackBar(context, "Cannot select past time slot, Please select another slot");
-                                                            } else if (_selectedSlotValues.isEmpty) {
-                                                              _selectedSlotValues.add(e);
-                                                              state(() {});
-                                                            } else if (_selectedSlotValues.isNotEmpty) {
-                                                              var found = 0;
-                                                              for (var i = 0; i < _selectedSlotValues.length; i++) {
-                                                                if ((e.split(" - ")[0] == _selectedSlotValues[i].toString().split(" - ")[1]) || (e.split(" - ")[1] == _selectedSlotValues[i].toString().split(" - ")[0])) {
-                                                                  _selectedSlotValues.add(e);
-                                                                  state(() {});
-                                                                  found = 1;
+                                                      for (var i = 1; i <= _bookingController.getRangesResponse.timeRanges!.length; i++)
+                                                        if (i % 2 != 0)
+                                                          InkWell(
+                                                            onTap: () {
+                                                              if (_bookingController.getRangesResponse.timeRanges![i] == "close") {
+                                                                showSnackBar(context, "This slot is fully booked, Please select another slot");
+                                                              } else if (checkSlotAferCurentTime(_bookingController.getRangesResponse.timeRanges![i - 1]) == false) {
+                                                                showSnackBar(context, "Cannot select past time slot, Please select another slot");
+                                                              } else if (_selectedSlotValues.isEmpty) {
+                                                                _selectedSlotValues.add(_bookingController.getRangesResponse.timeRanges![i - 1]);
+                                                              } else {
+                                                                var found = 0;
+                                                                for (var j = 0; j < _selectedSlotValues.length; j++) {
+                                                                  if ((_bookingController.getRangesResponse.timeRanges![i - 1].split(" - ")[0] == _selectedSlotValues[j].toString().split(" - ")[1]) || (_bookingController.getRangesResponse.timeRanges![i - 1].split(" - ")[1] == _selectedSlotValues[j].toString().split(" - ")[0])) {
+                                                                    _selectedSlotValues.add(_bookingController.getRangesResponse.timeRanges![i - 1]);
+                                                                    state(() {});
+                                                                    found = 1;
+                                                                  }
+                                                                }
+                                                                if (found == 0) {
+                                                                  showSnackBar(context, "Error! Only adjacent free slots can be selected");
                                                                 }
                                                               }
-                                                              if (found == 0) {
-                                                                showSnackBar(context, "Error! Only adjacent free slots can be selected");
-                                                              }
-                                                            } else {
-                                                              showSnackBar(context, "Something went wrong");
-                                                            }
-                                                          },
-                                                          child: SizedBox(
-                                                            height: 50,
-                                                            width: MediaQuery.of(context).size.width - 40,
-                                                            child: Row(
-                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                              children: [
-                                                                if (_selectedSlotValues.contains(e))
-                                                                  const Icon(
-                                                                    Icons.check,
-                                                                    color: Colors.green,
-                                                                  ),
-                                                                if (_selectedSlotValues.contains(e))
-                                                                  const SizedBox(
-                                                                    width: 10,
-                                                                  ),
-                                                                Text(e),
-                                                                const SizedBox(
-                                                                  width: 30,
-                                                                ),
-                                                                Container(
-                                                                  alignment: Alignment.center,
-                                                                  height: 25,
-                                                                  width: 60,
-                                                                  decoration: BoxDecoration(
-                                                                    color: _bookingController.getRangesResponse.timeRanges!.toJson()[e]! == "close" ? Colors.red : Colors.green,
-                                                                    borderRadius: BorderRadius.circular(5.0),
-                                                                  ),
-                                                                  child: Text(
-                                                                    _bookingController.getRangesResponse.timeRanges!.toJson()[e]!,
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
+                                                              state(() {});
+                                                            },
+                                                            child: SizedBox(
+                                                                height: 50,
+                                                                width: MediaQuery.of(context).size.width - 40,
+                                                                child: Row(
+                                                                  children: [
+                                                                    if (_selectedSlotValues.contains(_bookingController.getRangesResponse.timeRanges![i - 1]))
+                                                                      const Icon(
+                                                                        Icons.done,
+                                                                        color: Colors.green,
+                                                                      ),
+                                                                    const SizedBox(
+                                                                      width: 10,
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width: 150,
+                                                                      child: Text(
+                                                                        _bookingController.getRangesResponse.timeRanges![i - 1],
+                                                                      ),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      width: 20,
+                                                                    ),
+                                                                    if (i < _bookingController.getRangesResponse.timeRanges!.length)
+                                                                      Container(
+                                                                        alignment: Alignment.center,
+                                                                        height: 25,
+                                                                        width: 60,
+                                                                        decoration: BoxDecoration(
+                                                                          color: _bookingController.getRangesResponse.timeRanges![i] == "close" ? Colors.red : Colors.green,
+                                                                          borderRadius: BorderRadius.circular(5.0),
+                                                                        ),
+                                                                        child: Text(_bookingController.getRangesResponse.timeRanges![i]),
+                                                                      )
+                                                                  ],
+                                                                )),
                                                           ),
-                                                        );
-                                                      }).toList(),
                                                     ],
                                                   ),
                                                 )),
@@ -899,12 +928,22 @@ class _TimeSelectionState extends State<TimeSelection> with WidgetsBindingObserv
                             ),
                           ),
                     const Spacer(),
-                    ElevatedButton(
-                        style: ButtonStyle(shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)))),
-                        onPressed: () {
-                          makeBooking();
-                        },
-                        child: const Text("Make Payment")),
+                    Center(
+                        child: SliderButton(
+                            backgroundColor: Colors.black,
+                            shimmer: false,
+                            action: () async {
+                              makeBooking();
+                              return false;
+                            },
+                            label: const Text(
+                              "Slide to Pay",
+                              style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            icon: const Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.green,
+                            ))),
                     const SizedBox(
                       height: 50,
                     )

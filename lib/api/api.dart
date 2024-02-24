@@ -1,18 +1,21 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:mygame/models/req/add_business_model.dart';
 import 'package:mygame/models/req/booking_dropped.dart';
 import 'package:mygame/models/req/booking_request.dart';
 import 'package:mygame/models/req/confirm_booking.dart';
 import 'package:mygame/models/req/get_ranges_req.dart';
+import 'package:mygame/models/req/homefeed_request.dart';
 import 'package:mygame/models/req/pricing_request.dart';
 import 'package:mygame/models/req/sign_up_request.dart';
 import 'package:mygame/models/res/add_business_response.dart';
 import 'package:mygame/models/res/all_biz_info_response.dart';
 import 'package:mygame/models/res/booking_response.dart';
 import 'package:mygame/models/res/genereic_response.dart';
+import 'package:mygame/models/res/get_all_matches_response.dart';
 import 'package:mygame/models/res/get_ranges_response.dart';
+import 'package:mygame/models/res/home_feed_response.dart';
+import 'package:mygame/models/res/match_details.dart';
 import 'package:mygame/models/res/pricing_response.dart';
 import 'package:mygame/models/res/sign_up_response.dart';
 import 'package:mygame/models/res/simple_response.dart';
@@ -72,4 +75,15 @@ abstract class Api {
 
   @POST("client/booking/dropped")
   Future<SimpleResponse> droppedBooking(@Header("Content-Type") String contentType, @Body() BookingDropped request);
+
+  @POST("location/nearby-ground")
+  Future<HomeFeedResponse> homeFeed(@Header("Content-Type") String contentType, @Body() HomeFeedRequest request);
+
+  @GET("business/matches/{id}")
+  Future<AllMatchesResponse> getAllMatchesUnderBusiness(@Header("Content-Type") String contentType, @Path("id") id);
+
+  @GET("match/{id}")
+  Future<MatchDetailResponse> getMatchDetails(@Header("Content-Type") String contentType, @Path("id") id);
+  // @POST("client/location/nearby-ground")
+  // Future<SimpleResponse> homefeed(@Header("Content-Type") String contentType, @Body() BookingDropped request);
 }

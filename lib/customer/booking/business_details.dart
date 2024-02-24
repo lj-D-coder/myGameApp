@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mygame/customer/booking/all_matches.dart';
 import 'package:mygame/customer/booking/booking_controller.dart';
 import 'package:mygame/customer/booking/lineup.dart';
 import 'package:mygame/customer/booking/time_selection.dart';
 import 'package:mygame/customer/common_widgets/common_app_bar.dart';
 
 class BusinessDetails extends StatefulWidget {
-  const BusinessDetails({super.key});
+  final String businessId;
+  const BusinessDetails({super.key, required this.businessId});
 
   @override
   State<BusinessDetails> createState() => _BusinessDetailsState();
@@ -16,7 +18,7 @@ class _BusinessDetailsState extends State<BusinessDetails> {
   final BookingController _bookingController = Get.find();
   @override
   void initState() {
-    _bookingController.getBusinessDetails("65bbb352f5f90fa337eeb5b4");
+    _bookingController.getBusinessDetails(widget.businessId);
     super.initState();
   }
 
@@ -52,7 +54,7 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                               ),
                               Text(
-                                _bookingController.singleBusinessInfo.businessData!.businessInfo!.name ?? "",
+                                _bookingController.singleBusinessInfo.businessData!.businessInfo!.address ?? "",
                                 style: TextStyle(fontSize: 14, color: Colors.grey.shade400),
                               )
                             ],
@@ -98,6 +100,9 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                               child: Image.network(
                                 _bookingController.singleBusinessInfo.businessData!.businessInfo!.bannerUrl ?? "https://editorial.uefa.com/resources/025c-0f8e775cc072-f99f8b3389ab-1000/the_new_tottenham_hotspur_stadium_has_an_unusual_flexible_playing_surface.jpeg",
                                 fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.network(fit: BoxFit.cover, "https://editorial.uefa.com/resources/025c-0f8e775cc072-f99f8b3389ab-1000/the_new_tottenham_hotspur_stadium_has_an_unusual_flexible_playing_surface.jpeg");
+                                },
                               ),
                             ),
                           ),
@@ -135,13 +140,15 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                           // ),
                           InkWell(
                             onTap: () {
-                              Get.to(() => const LineUp(), transition: Transition.downToUp);
+                              _bookingController.getAllMatchesUnderBusiness(widget.businessId);
+                              Get.to(() => const AllMatches(), transition: Transition.downToUp);
+                              // Get.to(() => const LineUp(), transition: Transition.downToUp);
                             },
                             child: Container(
                               alignment: Alignment.center,
                               margin: const EdgeInsets.all(5),
                               height: 50,
-                              width: 100,
+                              width: 150,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(80),
                                 color: Colors.black38,
@@ -156,7 +163,7 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                             alignment: Alignment.center,
                             margin: EdgeInsets.all(5),
                             height: 50,
-                            width: 100,
+                            width: 150,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(80),
                               color: Colors.black38,
@@ -187,9 +194,7 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                                       width: MediaQuery.of(context).size.width * .85,
                                       child: const Row(
                                         children: [
-                                          CircleAvatar(
-                                            minRadius: 20,
-                                          ),
+                                          const Icon(Icons.sports_soccer_sharp, size: 50),
                                           Spacer(),
                                           Column(
                                             children: [Text("Heading"), Text("SubHeading")],
@@ -219,7 +224,7 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                                       ),
                                     ),
                                     onPressed: () {
-                                      Get.to(() => TimeSelection());
+                                      Get.to(() => const TimeSelection());
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
