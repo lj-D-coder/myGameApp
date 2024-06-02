@@ -16,7 +16,7 @@ class _AllMatchesState extends State<AllMatches> {
   final BookingController _bookingController = Get.find();
   String formatUnixTimestampTo12Hour(int unixTimestamp) {
     // Convert Unix timestamp to milliseconds
-    var dateTime = DateTime.fromMillisecondsSinceEpoch(unixTimestamp * 1000);
+    var dateTime = DateTime.fromMillisecondsSinceEpoch(unixTimestamp * 1000, isUtc: true);
     // Format the datetime to 12-hour format
     return DateFormat('h:mm a').format(dateTime);
   }
@@ -68,27 +68,38 @@ class _AllMatchesState extends State<AllMatches> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(_bookingController.singleBusinessInfo.businessData!.businessInfo!.name ?? ""),
-                          Text(_bookingController.singleBusinessInfo.businessData!.businessInfo!.address ?? ""),
+                          Text(_bookingController
+                                  .singleBusinessInfo.businessData!.businessInfo!.name ??
+                              ""),
+                          Text(_bookingController
+                                  .singleBusinessInfo.businessData!.businessInfo!.address ??
+                              ""),
                         ],
                       ),
                       const Spacer(),
                       InkWell(
                         onTap: () {
-                          _bookingController.gertMatchDetails(_bookingController.allMatchesUnderBiz[index].matchId);
-                          Get.to(() => LineUp());
+                          _bookingController.gertMatchDetails(
+                              _bookingController.allMatchesUnderBiz[index].matchId);
+                          Get.to(() => const LineUp());
                         },
                         child: Container(
                           alignment: Alignment.center,
                           height: 30,
                           width: 80,
                           decoration: BoxDecoration(
-                            color: _bookingController.allMatchesUnderBiz[index].playerCapacity == _bookingController.allMatchesUnderBiz[index].playerJoined ? Colors.grey : Colors.yellow,
+                            color: _bookingController.allMatchesUnderBiz[index].playerCapacity ==
+                                    _bookingController.allMatchesUnderBiz[index].playerJoined
+                                ? Colors.grey
+                                : Colors.yellow,
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Text(
-                            _bookingController.allMatchesUnderBiz[index].playerCapacity == _bookingController.allMatchesUnderBiz[index].playerJoined ? "Booked" : "Join",
-                            style: TextStyle(color: Colors.black),
+                            _bookingController.allMatchesUnderBiz[index].playerCapacity ==
+                                    _bookingController.allMatchesUnderBiz[index].playerJoined
+                                ? "Booked"
+                                : "Join",
+                            style: const TextStyle(color: Colors.black),
                           ),
                         ),
                       ),
@@ -104,9 +115,13 @@ class _AllMatchesState extends State<AllMatches> {
                       ),
                       Transform.scale(
                         scale: .7,
-                        child: Slider(value: _bookingController.allMatchesUnderBiz[index].playerJoined! / _bookingController.allMatchesUnderBiz[index].playerCapacity!, onChanged: (value) {}),
+                        child: Slider(
+                            value: _bookingController.allMatchesUnderBiz[index].playerJoined! /
+                                _bookingController.allMatchesUnderBiz[index].playerCapacity!,
+                            onChanged: (value) {}),
                       ),
-                      Text("${_bookingController.allMatchesUnderBiz[index].playerCapacity! - _bookingController.allMatchesUnderBiz[index].playerJoined!} slot left")
+                      Text(
+                          "${_bookingController.allMatchesUnderBiz[index].playerCapacity! - _bookingController.allMatchesUnderBiz[index].playerJoined!} slot left")
                     ],
                   )
                 ],

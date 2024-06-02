@@ -67,6 +67,7 @@ class NearbyGround {
 
 class Matches {
   String? matchId;
+  String? businessId;
   String? name;
   String? address;
   String? price;
@@ -77,10 +78,22 @@ class Matches {
   int? startTimestamp;
   int? endTimestamp;
 
-  Matches({this.matchId, this.name, this.address, this.price, this.gameTime, this.playerCapacity, this.playerJoined, this.matchDate, this.startTimestamp, this.endTimestamp});
+  Matches(
+      {this.matchId,
+      this.businessId,
+      this.name,
+      this.address,
+      this.price,
+      this.gameTime,
+      this.playerCapacity,
+      this.playerJoined,
+      this.matchDate,
+      this.startTimestamp,
+      this.endTimestamp});
 
   Matches.fromJson(Map<String, dynamic> json) {
     matchId = json['matchId'];
+    businessId = json['businessID'];
     name = json['name'];
     address = json['address'];
     price = json['price'];
@@ -95,6 +108,7 @@ class Matches {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['matchId'] = this.matchId;
+    data['businessID'] = this.businessId;
     data['name'] = this.name;
     data['address'] = this.address;
     data['price'] = this.price;

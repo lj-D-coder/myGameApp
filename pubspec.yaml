@@ -55,6 +55,8 @@ dependencies:
   cloud_firestore: ^4.15.3
   slider_button: ^2.1.0
   workmanager: ^0.5.2
+  firebase_messaging: ^14.9.4
+  url_launcher: ^6.2.6
   
 dev_dependencies:
   flutter_test:
@@ -96,6 +98,7 @@ flutter:
     - assets/images/inst.png
     - assets/images/red.png
     - assets/images/user.png
+    - assets/images/btn.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

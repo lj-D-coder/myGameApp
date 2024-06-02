@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mygame/customer/booking/all_matches.dart';
 import 'package:mygame/customer/booking/booking_controller.dart';
-import 'package:mygame/customer/booking/lineup.dart';
 import 'package:mygame/customer/booking/time_selection.dart';
 import 'package:mygame/customer/common_widgets/common_app_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BusinessDetails extends StatefulWidget {
   final String businessId;
@@ -16,6 +16,7 @@ class BusinessDetails extends StatefulWidget {
 
 class _BusinessDetailsState extends State<BusinessDetails> {
   final BookingController _bookingController = Get.find();
+
   @override
   void initState() {
     _bookingController.getBusinessDetails(widget.businessId);
@@ -50,11 +51,15 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                           Column(
                             children: [
                               Text(
-                                _bookingController.singleBusinessInfo.businessData!.businessInfo!.name ?? "",
+                                _bookingController
+                                        .singleBusinessInfo.businessData!.businessInfo!.name ??
+                                    "",
                                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                               ),
                               Text(
-                                _bookingController.singleBusinessInfo.businessData!.businessInfo!.address ?? "",
+                                _bookingController
+                                        .singleBusinessInfo.businessData!.businessInfo!.address ??
+                                    "",
                                 style: TextStyle(fontSize: 14, color: Colors.grey.shade400),
                               )
                             ],
@@ -78,33 +83,31 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                       indent: 160,
                       endIndent: 160,
                     ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Container(
-                      height: 150,
                       margin: const EdgeInsets.all(5),
-                      padding: const EdgeInsets.all(5),
-                      child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 5,
-                        itemBuilder: (ctx, index) => Container(
-                          margin: const EdgeInsets.all(5),
-                          width: 200,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.white,
-                          ),
-                          child: InkWell(
-                            onTap: () {},
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: Image.network(
-                                _bookingController.singleBusinessInfo.businessData!.businessInfo!.bannerUrl ?? "https://editorial.uefa.com/resources/025c-0f8e775cc072-f99f8b3389ab-1000/the_new_tottenham_hotspur_stadium_has_an_unusual_flexible_playing_surface.jpeg",
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Image.network(fit: BoxFit.cover, "https://editorial.uefa.com/resources/025c-0f8e775cc072-f99f8b3389ab-1000/the_new_tottenham_hotspur_stadium_has_an_unusual_flexible_playing_surface.jpeg");
-                                },
-                              ),
-                            ),
+                      width: MediaQuery.of(context).size.width,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                      ),
+                      child: InkWell(
+                        onTap: () {},
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Image.network(
+                            _bookingController
+                                    .singleBusinessInfo.businessData!.businessInfo!.bannerUrl ??
+                                "https://editorial.uefa.com/resources/025c-0f8e775cc072-f99f8b3389ab-1000/the_new_tottenham_hotspur_stadium_has_an_unusual_flexible_playing_surface.jpeg",
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.network(
+                                  fit: BoxFit.cover,
+                                  "https://editorial.uefa.com/resources/025c-0f8e775cc072-f99f8b3389ab-1000/the_new_tottenham_hotspur_stadium_has_an_unusual_flexible_playing_surface.jpeg");
+                            },
                           ),
                         ),
                       ),
@@ -114,9 +117,8 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                       margin: const EdgeInsets.all(14),
                       padding: const EdgeInsets.all(10),
                       width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(80),
-                        color: const Color.fromARGB(255, 49, 63, 91),
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 49, 63, 91),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -148,7 +150,7 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                               alignment: Alignment.center,
                               margin: const EdgeInsets.all(5),
                               height: 50,
-                              width: 150,
+                              width: 300,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(80),
                                 color: Colors.black38,
@@ -159,20 +161,6 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                               ),
                             ),
                           ),
-                          Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.all(5),
-                            height: 50,
-                            width: 150,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(80),
-                              color: Colors.black38,
-                            ),
-                            child: const Text(
-                              "Review",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          )
                         ],
                       ),
                     ),
@@ -193,31 +181,83 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                                       height: 50,
                                       width: MediaQuery.of(context).size.width * .85,
                                       child: const Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Icon(Icons.sports_soccer_sharp, size: 50),
-                                          Spacer(),
-                                          Column(
-                                            children: [Text("Heading"), Text("SubHeading")],
-                                          ),
-                                          Spacer(),
-                                          Icon(Icons.more_vert)
+                                          Icon(Icons.sports_soccer_sharp, size: 50),
                                         ],
                                       ),
                                     ),
                                   ),
-                                  const Padding(
-                                    padding: EdgeInsets.all(20.0),
-                                    child: Text("Lorem Ipsum is simply dummy text os text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."),
+                                  Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Container(
+                                      height: 200,
+                                      alignment: Alignment.center,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Phone no: ",
+                                                style: Theme.of(context).textTheme.labelLarge,
+                                              ),
+                                              Text(
+                                                "${_bookingController.singleBusinessInfo.businessData!.businessInfo!.phoneNo}",
+                                                style: Theme.of(context).textTheme.bodyLarge,
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Email: ",
+                                                style: Theme.of(context).textTheme.labelLarge,
+                                              ),
+                                              Text(
+                                                "${_bookingController.singleBusinessInfo.businessData!.businessInfo!.email}",
+                                                style: Theme.of(context).textTheme.bodyLarge,
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Address: ",
+                                                style: Theme.of(context).textTheme.labelLarge,
+                                              ),
+                                              Text(
+                                                "${_bookingController.singleBusinessInfo.businessData!.businessInfo!.address}",
+                                                style: Theme.of(context).textTheme.bodyLarge,
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Business Time: ",
+                                                style: Theme.of(context).textTheme.labelLarge,
+                                              ),
+                                              Text(
+                                                "${_bookingController.singleBusinessInfo.businessData!.businessHours!.openTime} - ${_bookingController.singleBusinessInfo.businessData!.businessHours!.closeTime}",
+                                                style: Theme.of(context).textTheme.bodyLarge,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                   ElevatedButton(
                                     style: ButtonStyle(
-                                      backgroundColor: MaterialStatePropertyAll(
+                                      backgroundColor: WidgetStatePropertyAll(
                                         Colors.grey.withOpacity(0.5), // Semi-transparent grey color
                                       ),
-                                      overlayColor: MaterialStatePropertyAll(
+                                      overlayColor: WidgetStatePropertyAll(
                                         Colors.white.withOpacity(0.2), // Color when pressed
                                       ),
-                                      shape: MaterialStatePropertyAll(
+                                      shape: WidgetStatePropertyAll(
                                         RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(16.0),
                                         ),
@@ -227,7 +267,8 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                                       Get.to(() => const TimeSelection());
                                     },
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16.0, vertical: 8.0),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
@@ -240,7 +281,8 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                                             decoration: BoxDecoration(
                                               boxShadow: [
                                                 BoxShadow(
-                                                  color: Colors.green.withOpacity(0.8), // Glow color
+                                                  color:
+                                                      Colors.green.withOpacity(0.8), // Glow color
                                                   blurRadius: 8.0,
                                                   spreadRadius: 2.0,
                                                 ),
@@ -266,10 +308,21 @@ class _BusinessDetailsState extends State<BusinessDetails> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Image.asset("assets/images/inst.png"),
-                                Image.asset("assets/images/fb.png"),
-                                Image.asset("assets/images/followvert.png"),
-                                Image.asset("assets/images/heart.png"),
+                                InkWell(
+                                    onTap: () {
+                                      launchUrl(Uri.parse(_bookingController.singleBusinessInfo
+                                              .businessData!.businessInfo!.instagram ??
+                                          ""));
+                                    },
+                                    child: Image.asset("assets/images/inst.png")),
+                                InkWell(
+                                    onTap: () {
+                                      launchUrl(Uri.parse(_bookingController.singleBusinessInfo
+                                              .businessData!.businessInfo!.facebook ??
+                                          ""));
+                                    },
+                                    child: Image.asset("assets/images/fb.png")),
+                                Image.asset("assets/images/btn.png"),
                                 const SizedBox(
                                   height: 20,
                                 ),

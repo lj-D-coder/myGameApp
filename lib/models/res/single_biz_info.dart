@@ -31,12 +31,10 @@ class SingleBusinessInfo implements Serializable {
       userRole: json['userRole'],
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
-      businessData: json['businessData'] != null
-          ? new BusinessData.fromJson(json['businessData'])
-          : null,
-      pricingData: json['PricingData'] != null
-          ? new PricingData.fromJson(json['PricingData'])
-          : null,
+      businessData:
+          json['businessData'] != null ? new BusinessData.fromJson(json['businessData']) : null,
+      pricingData:
+          json['PricingData'] != null ? new PricingData.fromJson(json['PricingData']) : null,
     );
   }
 
@@ -86,16 +84,13 @@ class BusinessData {
       businessStatus: json['businessStatus'] != null
           ? new BusinessStatus.fromJson(json['businessStatus'])
           : null,
-      businessInfo: json['businessInfo'] != null
-          ? new BusinessInfo.fromJson(json['businessInfo'])
-          : null,
-      businessHours: json['businessHours'] != null
-          ? new BusinessHours.fromJson(json['businessHours'])
-          : null,
+      businessInfo:
+          json['businessInfo'] != null ? new BusinessInfo.fromJson(json['businessInfo']) : null,
+      businessHours:
+          json['businessHours'] != null ? new BusinessHours.fromJson(json['businessHours']) : null,
       slot: json['slot'] != null ? new Slot.fromJson(json['slot']) : null,
-      bookingType: json['bookingType'] != null
-          ? new BookingType.fromJson(json['bookingType'])
-          : null,
+      bookingType:
+          json['bookingType'] != null ? new BookingType.fromJson(json['bookingType']) : null,
       businessID: json['businessID'],
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
@@ -136,9 +131,7 @@ class BusinessStatus {
 
   factory BusinessStatus.fromJson(Map<String, dynamic> json) {
     return BusinessStatus(
-      holiday: json['holiday'] != null
-          ? new Holiday.fromJson(json['holiday'])
-          : null,
+      holiday: json['holiday'] != null ? new Holiday.fromJson(json['holiday']) : null,
       open: json['open'],
       blocked: json['blocked'],
       setupComplete: json['setupComplete'],
@@ -208,6 +201,8 @@ class BusinessInfo {
   String? email;
   String? gstNo;
   String? bannerUrl;
+  String? facebook;
+  String? instagram;
 
   BusinessInfo(
       {this.location,
@@ -216,19 +211,21 @@ class BusinessInfo {
       this.phoneNo,
       this.email,
       this.gstNo,
-      this.bannerUrl});
+      this.bannerUrl,
+      this.facebook,
+      this.instagram});
 
   factory BusinessInfo.fromJson(Map<String, dynamic> json) {
     return BusinessInfo(
-      location: json['location'] != null
-          ? new Location.fromJson(json['location'])
-          : null,
+      location: json['location'] != null ? new Location.fromJson(json['location']) : null,
       name: json['name'],
       address: json['address'],
       phoneNo: json['phoneNo'],
       email: json['email'],
       gstNo: json['gstNo'],
       bannerUrl: json['bannerUrl'],
+      facebook: json['facebook'],
+      instagram: json['instagram'],
     );
   }
 
@@ -243,6 +240,8 @@ class BusinessInfo {
     data['email'] = this.email;
     data['gstNo'] = this.gstNo;
     data['bannerUrl'] = this.bannerUrl;
+    data['facebook'] = this.facebook;
+    data['instagram'] = this.instagram;
     return data;
   }
 }
@@ -274,8 +273,7 @@ class BusinessHours {
   String? breakStart;
   String? breakEnd;
 
-  BusinessHours(
-      {this.openTime, this.closeTime, this.breakStart, this.breakEnd});
+  BusinessHours({this.openTime, this.closeTime, this.breakStart, this.breakEnd});
 
   factory BusinessHours.fromJson(Map<String, dynamic> json) {
     return BusinessHours(
@@ -389,14 +387,9 @@ class Price {
 
   factory Price.fromJson(Map<String, dynamic> json) {
     return Price(
-        individual: json['individual'] != null
-            ? new Individual.fromJson(json['individual'])
-            : null,
-        team:
-            json['team'] != null ? new Individual.fromJson(json['team']) : null,
-        field: json['field'] != null
-            ? new Individual.fromJson(json['field'])
-            : null);
+        individual: json['individual'] != null ? new Individual.fromJson(json['individual']) : null,
+        team: json['team'] != null ? new Individual.fromJson(json['team']) : null,
+        field: json['field'] != null ? new Individual.fromJson(json['field']) : null);
   }
 
   Map<String, dynamic> toJson() {
@@ -429,8 +422,7 @@ class Individual {
 
   factory Individual.fromJson(Map<String, dynamic> json) {
     return Individual(
-      coupon:
-          json['coupon'] != null ? new Coupon.fromJson(json['coupon']) : null,
+      coupon: json['coupon'] != null ? new Coupon.fromJson(json['coupon']) : null,
       type: json['type'],
       price: json['Price'],
       discount: json['discount'],

@@ -1,38 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mygame/admin/admin_controller.dart';
-import 'package:mygame/admin/dialog/add_edit_dialog.dart';
-import 'package:mygame/models/req/add_business_model.dart';
-import 'package:mygame/utils/snackbar.dart';
+import 'package:mygame/customer/booking/booking_controller.dart';
+import 'package:mygame/customer/booking/business_details.dart';
 
-class AllBusinessList extends StatefulWidget {
-  const AllBusinessList({super.key});
+class AllBusinessListClient extends StatefulWidget {
+  const AllBusinessListClient({super.key});
 
   @override
-  State<AllBusinessList> createState() => _AllBusinessListState();
+  State<AllBusinessListClient> createState() => _AllBusinessListState();
 }
 
-class _AllBusinessListState extends State<AllBusinessList> {
-  final AdminController adminController = Get.find();
+class _AllBusinessListState extends State<AllBusinessListClient> {
+  final BookingController bookingController = Get.find();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    bookingController.allBusinessList.clear();
+    bookingController.getAllBusiness();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
-        title: const Text("myGame"),
+        title: Text(
+          "Business List",
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
       ),
       body: Obx(
-        () => adminController.allBusinessList.isNotEmpty
+        () => bookingController.allBusinessList.isNotEmpty
             ? ListView.builder(
                 itemBuilder: (ctx, index) {
                   return GestureDetector(
-                    onLongPress: () {},
+                    onTap: () {
+                      Get.to(() => BusinessDetails(
+                          businessId:
+                              bookingController.allBusinessList[index].businessData?.businessID));
+                    },
                     child: Container(
                       margin: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           fit: BoxFit.cover,
-                          image: NetworkImage(adminController
+                          image: NetworkImage(bookingController
                                   .allBusinessList[index].businessData?.businessInfo?.bannerUrl ??
                               "https://media.hudle.in/venues/2eb223fa-f9f5-4f64-a73c-40986bb91442/photo/d6d08022281596c32755ac999fa26fb9c6af2f4c"),
                         ),
@@ -62,8 +76,8 @@ class _AllBusinessListState extends State<AllBusinessList> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  adminController.allBusinessList[index].businessData?.businessInfo
-                                          ?.name ??
+                                  bookingController.allBusinessList[index].businessData
+                                          ?.businessInfo?.name ??
                                       "",
                                   style: const TextStyle(
                                     fontSize: 20,
@@ -73,48 +87,15 @@ class _AllBusinessListState extends State<AllBusinessList> {
                                 Row(
                                   children: [
                                     Text(
-                                      adminController.allBusinessList[index].businessData
+                                      bookingController.allBusinessList[index].businessData
                                               ?.businessInfo?.address ??
                                           "",
                                     ),
                                     const Spacer(),
                                     Text(
-                                      "Contact:- ${adminController.allBusinessList[index].businessData?.businessInfo?.phoneNo.toString() ?? adminController.allBusinessList[index].businessData?.businessInfo?.email ?? ""}",
+                                      "Contact:- ${bookingController.allBusinessList[index].businessData?.businessInfo?.phoneNo.toString() ?? bookingController.allBusinessList[index].businessData?.businessInfo?.email ?? ""}",
                                     ),
                                   ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Positioned(
-                            right: 0,
-                            top: 10,
-                            child: PopupMenuButton(
-                              color: Colors.white,
-                              iconColor: Colors.white,
-                              padding: EdgeInsets.zero,
-                              onSelected: (value) {
-                                // Handle the selected option
-                                // You can implement different actions based on the selected value
-                                if (value == 'update') {
-                                  addEditDialog(
-                                      context, adminController.allBusinessList[index].businessData);
-                                } else if (value == 'delete') {
-                                  adminController.deleteBusiness(adminController
-                                          .allBusinessList[index].businessData!.businessID ??
-                                      "0");
-                                }
-                              },
-                              itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                                const PopupMenuItem(
-                                  textStyle: TextStyle(color: Colors.white),
-                                  value: 'update',
-                                  child: Text('Update'),
-                                ),
-                                const PopupMenuItem(
-                                  textStyle: TextStyle(color: Colors.white),
-                                  value: 'delete',
-                                  child: Text('Delete'),
                                 ),
                               ],
                             ),
@@ -124,11 +105,9 @@ class _AllBusinessListState extends State<AllBusinessList> {
                     ),
                   );
                 },
-                itemCount: adminController.allBusinessList.length,
+                itemCount: bookingController.allBusinessList.length,
               )
-            : Container(
-                child: Center(child: Text("No business found")),
-              ),
+            : const Center(child: Text("No business found")),
       ),
     );
   }
