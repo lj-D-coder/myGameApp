@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mygame/customer/booking/booking_controller.dart';
+import 'package:mygame/customer/booking/time_selection.dart';
 import 'package:mygame/customer/common_widgets/common_app_bar.dart';
 
 class LineUp extends StatefulWidget {
@@ -36,7 +37,7 @@ class _LineUpState extends State<LineUp> {
                     ),
                     Container(
                       alignment: Alignment.center,
-                      height: MediaQuery.of(context).size.height - 200,
+                      height: MediaQuery.of(context).size.height - 100,
                       width: MediaQuery.of(context).size.width,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,8 +51,15 @@ class _LineUpState extends State<LineUp> {
                               Text(
                                 "${bookingController.singleMatchDetails.value.data!.teams!.leftTeam!.length} / ${bookingController.singleMatchDetails.value.data!.playerCapacity! ~/ 2}",
                               ),
-                              for (var i = 0; i < bookingController.singleMatchDetails.value.data!.playerCapacity! ~/ 2; i++)
-                                i < bookingController.singleMatchDetails.value.data!.teams!.leftTeam!.length
+                              for (var i = 0;
+                                  i <
+                                      bookingController
+                                              .singleMatchDetails.value.data!.playerCapacity! ~/
+                                          2;
+                                  i++)
+                                i <
+                                        bookingController
+                                            .singleMatchDetails.value.data!.teams!.leftTeam!.length
                                     ? Container(
                                         height: 100,
                                         width: 100,
@@ -70,7 +78,8 @@ class _LineUpState extends State<LineUp> {
                                             Container(
                                                 alignment: Alignment.center,
                                                 child: Text(
-                                                  bookingController.singleMatchDetails.value.data!.teams!.leftTeam![i],
+                                                  bookingController.singleMatchDetails.value.data!
+                                                      .teams!.leftTeam![i],
                                                   overflow: TextOverflow.ellipsis,
                                                 ))
                                           ],
@@ -80,7 +89,7 @@ class _LineUpState extends State<LineUp> {
                                         height: 100,
                                         width: 100,
                                         alignment: Alignment.center,
-                                        child: Column(
+                                        child: const Column(
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             Padding(
@@ -114,8 +123,15 @@ class _LineUpState extends State<LineUp> {
                               Text(
                                 "${bookingController.singleMatchDetails.value.data!.teams!.rightTeam!.length} / ${bookingController.singleMatchDetails.value.data!.playerCapacity! ~/ 2}",
                               ),
-                              for (var i = 0; i < bookingController.singleMatchDetails.value.data!.playerCapacity! ~/ 2; i++)
-                                i < bookingController.singleMatchDetails.value.data!.teams!.rightTeam!.length
+                              for (var i = 0;
+                                  i <
+                                      bookingController
+                                              .singleMatchDetails.value.data!.playerCapacity! ~/
+                                          2;
+                                  i++)
+                                i <
+                                        bookingController
+                                            .singleMatchDetails.value.data!.teams!.rightTeam!.length
                                     ? Container(
                                         height: 100,
                                         width: 100,
@@ -133,7 +149,8 @@ class _LineUpState extends State<LineUp> {
                                             Container(
                                                 alignment: Alignment.center,
                                                 child: Text(
-                                                  bookingController.singleMatchDetails.value.data!.teams!.rightTeam![i],
+                                                  bookingController.singleMatchDetails.value.data!
+                                                      .teams!.rightTeam![i],
                                                   overflow: TextOverflow.ellipsis,
                                                 ))
                                           ],
@@ -180,13 +197,102 @@ class _LineUpState extends State<LineUp> {
                           ),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                            barrierDismissible: true,
+                            context: context,
+                            builder: (ctx) {
+                              return Center(
+                                  child: AlertDialog(
+                                contentPadding: EdgeInsets.zero,
+                                shape:
+                                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                content: Container(
+                                  height: 200,
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Choose Team",
+                                        style: TextStyle(
+                                            color: Theme.of(context).primaryColor,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              Get.to(() => TimeSelection(), arguments: {
+                                                'side': "leftTeam",
+                                                'date': bookingController
+                                                    .singleMatchDetails.value.data!.matchDate,
+                                                'startTime': bookingController
+                                                    .singleMatchDetails.value.data!.startTimestamp,
+                                                'bookingType': bookingController
+                                                    .singleMatchDetails.value.data!.bookingType,
+                                                'endTime': bookingController
+                                                    .singleMatchDetails.value.data!.endTimestamp,
+                                              });
+                                            },
+                                            child: Container(
+                                              height: 100,
+                                              width: 100,
+                                              color: Theme.of(context).primaryColor,
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                "Join Left\nTeam",
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ),
+                                          InkWell(
+                                              onTap: () {
+                                                Get.to(() => TimeSelection(), arguments: {
+                                                  'side': "rightTeam",
+                                                  'date': bookingController
+                                                      .singleMatchDetails.value.data!.matchDate,
+                                                  'startTime': bookingController.singleMatchDetails
+                                                      .value.data!.startTimestamp,
+                                                  'bookingType': bookingController
+                                                      .singleMatchDetails.value.data!.bookingType,
+                                                  'endTime': bookingController
+                                                      .singleMatchDetails.value.data!.endTimestamp,
+                                                });
+                                              },
+                                              child: Container(
+                                                height: 100,
+                                                width: 100,
+                                                color: Theme.of(context).primaryColor,
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  "Join Right\nTeam",
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ))
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ));
+                            }).then((value) {});
+                      },
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
+                            const Text(
                               "Join",
                               style: TextStyle(color: Colors.white),
                             ),

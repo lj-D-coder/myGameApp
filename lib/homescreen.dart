@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:location/location.dart';
 import 'package:mygame/business/business_appbar.dart';
 import 'package:mygame/business/setup.dart';
 import 'package:mygame/core/user_type.dart';
+import 'package:mygame/customer/booking/booking.dart';
+import 'package:mygame/customer/booking/booking_controller.dart';
 import 'package:mygame/customer/booking/home_feed.dart';
 import 'package:mygame/customer/common_widgets/common_app_bar.dart';
+import 'package:mygame/customer/friends/find_friends.dart';
+import 'package:mygame/customer/friends/find_friends_controller.dart';
+import 'package:mygame/customer/settings/settings.dart';
+import 'package:mygame/services/fcm_service.dart';
 
 class MyHomePage extends StatefulWidget {
   final UserType userType;
@@ -16,6 +25,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final BookingController _bookingController = Get.put(BookingController());
+  final FindFriendsController _findFriendsController = Get.put(FindFriendsController());
+  final PushNotificationService _notificationService = PushNotificationService();
+
+  var box = GetStorage();
+
   int currentIndex = 0;
   void onTap(index) {
     setState(() {
@@ -25,10 +40,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final pages = [
     const HomeFeed(),
-    const HomeFeed(),
-    const HomeFeed(),
-    const HomeFeed(),
+    const FindFriends(),
+    const Booking(),
+    const Settings(),
   ];
+
+  @override
+  void initState() {
+    _notificationService.initialize(context);
+    _notificationService.getToken().then((value) {
+      _bookingController.saveToken(value);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +76,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     BottomNavigationBarItem(
                         icon: Icon(
-                          Icons.pin_drop,
+                          Icons.person,
                         ),
-                        label: "Game"),
+                        label: "Players"),
                     BottomNavigationBarItem(
                         icon: Icon(
                           Icons.menu,

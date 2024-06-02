@@ -7,7 +7,7 @@ import 'package:mygame/homescreen.dart';
 
 void flowDecider(UserType type) {
   if (type == UserType.player) {
-    Get.offAll(() => MyHomePage(userType: type));
+    Get.offAll(() => MyHomePage(userType: type)); 
   } else if (type == UserType.business) {
     Get.offAll(() => const BookingList());
   } else if (type == UserType.admin) {

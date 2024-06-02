@@ -17,15 +17,11 @@ class BusinessAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           Text(
             "myGame",
-            style: Theme.of(context)
-                .textTheme
-                .displaySmall!
-                .copyWith(fontSize: 20),
+            style: Theme.of(context).textTheme.displaySmall!.copyWith(fontSize: 20),
           )
         ],
       ),
       actions: const [
-        Icon(Icons.notifications),
         SizedBox(
           width: 15,
         ),

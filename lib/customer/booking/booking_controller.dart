@@ -5,6 +5,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:mygame/api/api.dart';
 import 'package:mygame/api/otp_service.dart';
+import 'package:mygame/models/req/save_token_req.dart';
+import 'package:mygame/models/req/update_location_req.dart';
 import 'package:mygame/models/res/booking_response.dart';
 import 'package:mygame/models/res/get_ranges_response.dart';
 import 'package:mygame/models/res/home_feed_response.dart';
@@ -31,6 +33,8 @@ class BookingController extends GetxController {
   RxList<Matches> matches = <Matches>[].obs;
   RxList allMatchesUnderBiz = [].obs;
   var singleMatchDetails = MatchDetailResponse().obs;
+  var myBookingList = [].obs;
+  var allBusinessList = [].obs;
 
   RxDouble price = 0.0.obs;
   RxDouble fieldPrice = 0.0.obs;
@@ -154,12 +158,14 @@ class BookingController extends GetxController {
     try {
       showDialog();
       final data = await apiService.booking("application/json", req);
+      closeDialog();
       if (data.status == 200) {
         bookingResponse = data;
+      } else {
+        throw data.message ?? "";
       }
-      closeDialog();
     } catch (err) {
-      throw err;
+      rethrow;
     }
   }
 
@@ -200,6 +206,49 @@ class BookingController extends GetxController {
     }
   }
 
+  Future<void> saveToken(token) async {
+    try {
+      var userData = await box.read("UserData");
+      var id = userData["userId"];
+      FirebaseSaveTokenReq firebaseSaveTokenReq = FirebaseSaveTokenReq();
+      firebaseSaveTokenReq.firebaseToken = token;
+      firebaseSaveTokenReq.userId = id;
+      final data = await apiService.saveToken("application/json", firebaseSaveTokenReq);
+      if (data.status == 200) {
+      } else {}
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  Future<void> getAllBusiness() async {
+    try {
+      final data = await apiService.getAllBusiness("application/json");
+      if (data.status == 200) {
+        allBusinessList.value = data.data ?? [];
+      } else {}
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  Future<void> updateUserLocation(lat, lng) async {
+    var userData = await box.read("UserData");
+    var id = userData["userId"];
+    UpdateLocationReq updateLocationReq = UpdateLocationReq();
+    updateLocationReq.latitude = lat.toString();
+    updateLocationReq.longitude = lng.toString();
+    updateLocationReq.userId = id;
+    try {
+      showDialog();
+      final data = await apiService.updateUserLocation("application/json", updateLocationReq);
+      closeDialog();
+      if (data.status == 200) {}
+    } catch (err) {
+      rethrow;
+    }
+  }
+
   Future<void> getAllMatchesUnderBusiness(id) async {
     try {
       final data = await apiService.getAllMatchesUnderBusiness("application/json", id);
@@ -218,6 +267,20 @@ class BookingController extends GetxController {
       if (data.status == 200) {
         singleMatchDetails.value = data;
       } else {}
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  Future<void> getClientBooking() async {
+    var userData = box.read("UserData") ?? {};
+    try {
+      showDialog();
+      final data = await apiService.getClientBooking("application/json", userData['userId']);
+      closeDialog();
+      if (data.status == 200) {
+        myBookingList.value = data.data ?? [];
+      }
     } catch (err) {
       throw err;
     }

@@ -23,8 +23,7 @@ class SetUp extends StatefulWidget {
 }
 
 class _SetUpState extends State<SetUp> {
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
+  final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
 
   GetStorage box = GetStorage();
   final _formKey = GlobalKey<FormState>();
@@ -159,54 +158,39 @@ class _SetUpState extends State<SetUp> {
 
   void initializeData() {
     if (businessController.singleBusinessInfo.businessData != null) {
-      businessNameTextController.text = businessController
-              .singleBusinessInfo.businessData!.businessInfo!.name ??
-          "";
-      emailController.text = businessController
-              .singleBusinessInfo.businessData!.businessInfo!.email ??
-          "";
-      startTimeController.text = businessController
-              .singleBusinessInfo.businessData!.businessHours!.openTime ??
-          "";
-      endTimeController.text = businessController
-              .singleBusinessInfo.businessData!.businessHours!.closeTime ??
-          "";
-      breakStart.text = businessController
-              .singleBusinessInfo.businessData!.businessHours!.breakStart ??
-          "";
-      breakEnd.text = businessController
-              .singleBusinessInfo.businessData!.businessHours!.breakEnd ??
-          "";
-      gstTextController.text = businessController
-              .singleBusinessInfo.businessData!.businessInfo!.gstNo ??
-          "";
+      businessNameTextController.text =
+          businessController.singleBusinessInfo.businessData!.businessInfo!.name ?? "";
+      emailController.text =
+          businessController.singleBusinessInfo.businessData!.businessInfo!.email ?? "";
+      startTimeController.text =
+          businessController.singleBusinessInfo.businessData!.businessHours!.openTime ?? "";
+      endTimeController.text =
+          businessController.singleBusinessInfo.businessData!.businessHours!.closeTime ?? "";
+      breakStart.text =
+          businessController.singleBusinessInfo.businessData!.businessHours!.breakStart ?? "";
+      breakEnd.text =
+          businessController.singleBusinessInfo.businessData!.businessHours!.breakEnd ?? "";
+      gstTextController.text =
+          businessController.singleBusinessInfo.businessData!.businessInfo!.gstNo ?? "";
 
-      playerPerSide.text = businessController
-          .singleBusinessInfo.businessData!.slot!.playerPerSide
-          .toString();
+      playerPerSide.text =
+          businessController.singleBusinessInfo.businessData!.slot!.playerPerSide.toString();
 
-      localbookingType = businessController
-          .singleBusinessInfo.businessData!.bookingType!
-          .toJson();
+      localbookingType = businessController.singleBusinessInfo.businessData!.bookingType!.toJson();
 
-      gameLengthController.text = businessController
-          .singleBusinessInfo.businessData!.slot!.gameLength
-          .toString();
-      if (businessController
-              .singleBusinessInfo.businessData!.businessInfo!.location !=
-          null) {
+      gameLengthController.text =
+          businessController.singleBusinessInfo.businessData!.slot!.gameLength.toString();
+      if (businessController.singleBusinessInfo.businessData!.businessInfo!.location != null) {
         locationText.text =
             "${businessController.singleBusinessInfo.businessData!.businessInfo!.location!.latitude!},${businessController.singleBusinessInfo.businessData!.businessInfo!.location!.longitude!}";
       }
 
-      address.text = businessController
-              .singleBusinessInfo.businessData!.businessInfo!.address ??
-          "";
-      _selectedValue = businessController
-                  .singleBusinessInfo.businessData!.slot!.customGameLength ==
-              true
-          ? "Yes"
-          : "No";
+      address.text =
+          businessController.singleBusinessInfo.businessData!.businessInfo!.address ?? "";
+      _selectedValue =
+          businessController.singleBusinessInfo.businessData!.slot!.customGameLength == true
+              ? "Yes"
+              : "No";
 
       WidgetsBinding.instance.addPostFrameCallback((time) {
         showDialog(
@@ -220,8 +204,7 @@ class _SetUpState extends State<SetUp> {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                             color: Theme.of(context).primaryColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(20))),
+                            borderRadius: const BorderRadius.all(Radius.circular(20))),
                         height: 250,
                         width: 350,
                         child: SingleChildScrollView(
@@ -304,8 +287,7 @@ class _SetUpState extends State<SetUp> {
                               isDense: true,
                               focusColor: Colors.white,
                               labelText: "Business Name *",
-                              labelStyle:
-                                  TextStyle(color: Colors.white, fontSize: 13),
+                              labelStyle: TextStyle(color: Colors.white, fontSize: 13),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                               ),
@@ -330,8 +312,7 @@ class _SetUpState extends State<SetUp> {
                               isDense: true,
                               focusColor: Colors.white,
                               labelText: "Email *",
-                              labelStyle:
-                                  TextStyle(color: Colors.white, fontSize: 13),
+                              labelStyle: TextStyle(color: Colors.white, fontSize: 13),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                               ),
@@ -351,8 +332,7 @@ class _SetUpState extends State<SetUp> {
                               isDense: true,
                               focusColor: Colors.white,
                               labelText: "GST (optional) *",
-                              labelStyle:
-                                  TextStyle(color: Colors.white, fontSize: 13),
+                              labelStyle: TextStyle(color: Colors.white, fontSize: 13),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                               ),
@@ -363,13 +343,10 @@ class _SetUpState extends State<SetUp> {
                           ),
                           InkWell(
                             onTap: () {
-                              showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.now())
+                              showTimePicker(context: context, initialTime: TimeOfDay.now())
                                   .then((value) {
                                 setState(() {
-                                  startTimeController.text =
-                                      value!.format(context);
+                                  startTimeController.text = value!.format(context);
                                 });
                               });
                             },
@@ -391,8 +368,7 @@ class _SetUpState extends State<SetUp> {
                                   ),
                                   focusColor: Colors.white,
                                   labelText: "Open Time *",
-                                  labelStyle: TextStyle(
-                                      color: Colors.white, fontSize: 13),
+                                  labelStyle: TextStyle(color: Colors.white, fontSize: 13),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.white),
                                   ),
@@ -405,13 +381,10 @@ class _SetUpState extends State<SetUp> {
                           ),
                           InkWell(
                             onTap: () {
-                              showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.now())
+                              showTimePicker(context: context, initialTime: TimeOfDay.now())
                                   .then((value) {
                                 setState(() {
-                                  endTimeController.text =
-                                      value!.format(context);
+                                  endTimeController.text = value!.format(context);
                                 });
                               });
                             },
@@ -433,8 +406,7 @@ class _SetUpState extends State<SetUp> {
                                   ),
                                   focusColor: Colors.white,
                                   labelText: "Close Time *",
-                                  labelStyle: TextStyle(
-                                      color: Colors.white, fontSize: 13),
+                                  labelStyle: TextStyle(color: Colors.white, fontSize: 13),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.white),
                                   ),
@@ -447,9 +419,7 @@ class _SetUpState extends State<SetUp> {
                           ),
                           InkWell(
                             onTap: () {
-                              showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.now())
+                              showTimePicker(context: context, initialTime: TimeOfDay.now())
                                   .then((value) {
                                 setState(() {
                                   breakStart.text = value!.format(context);
@@ -469,8 +439,7 @@ class _SetUpState extends State<SetUp> {
                                   ),
                                   focusColor: Colors.white,
                                   labelText: "Break Start (optional)",
-                                  labelStyle: TextStyle(
-                                      color: Colors.white, fontSize: 13),
+                                  labelStyle: TextStyle(color: Colors.white, fontSize: 13),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.white),
                                   ),
@@ -483,9 +452,7 @@ class _SetUpState extends State<SetUp> {
                           ),
                           InkWell(
                             onTap: () {
-                              showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.now())
+                              showTimePicker(context: context, initialTime: TimeOfDay.now())
                                   .then((value) {
                                 setState(() {
                                   breakEnd.text = value!.format(context);
@@ -505,8 +472,7 @@ class _SetUpState extends State<SetUp> {
                                   ),
                                   focusColor: Colors.white,
                                   labelText: "Break End (optional)",
-                                  labelStyle: TextStyle(
-                                      color: Colors.white, fontSize: 13),
+                                  labelStyle: TextStyle(color: Colors.white, fontSize: 13),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.white),
                                   ),
@@ -534,9 +500,8 @@ class _SetUpState extends State<SetUp> {
                                 borderSide: BorderSide(color: Colors.white),
                               ),
                               focusColor: Colors.white,
-                              labelText: "Player per side length",
-                              labelStyle:
-                                  TextStyle(color: Colors.white, fontSize: 13),
+                              labelText: "Player per side length *",
+                              labelStyle: TextStyle(color: Colors.white, fontSize: 13),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                               ),
@@ -563,8 +528,7 @@ class _SetUpState extends State<SetUp> {
                               ),
                               focusColor: Colors.white,
                               labelText: "Game length (in minutes) *",
-                              labelStyle:
-                                  TextStyle(color: Colors.white, fontSize: 13),
+                              labelStyle: TextStyle(color: Colors.white, fontSize: 13),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                               ),
@@ -598,14 +562,9 @@ class _SetUpState extends State<SetUp> {
                                     _selectedValue = newValue.toString();
                                   });
                                 },
-                                items: <String>[
-                                  'Is custom length game',
-                                  'Yes',
-                                  'No'
-                                ]
+                                items: <String>['Is custom length game', 'Yes', 'No']
                                     .map<DropdownMenuItem<String>>(
-                                      (String value) =>
-                                          DropdownMenuItem<String>(
+                                      (String value) => DropdownMenuItem<String>(
                                         value: value,
                                         child: Text(value),
                                       ),
@@ -625,14 +584,12 @@ class _SetUpState extends State<SetUp> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 15.0, top: 8.0),
+                                  padding: EdgeInsets.only(left: 15.0, top: 8.0),
                                   child: Text("Select Booking Type"),
                                 ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children:
-                                      localbookingType.keys.map((String key) {
+                                  children: localbookingType.keys.map((String key) {
                                     return CheckboxListTile(
                                       dense: true,
                                       title: Text(key),
@@ -663,24 +620,20 @@ class _SetUpState extends State<SetUp> {
                                           child: Stack(
                                             children: [
                                               Container(
-                                                padding:
-                                                    const EdgeInsets.all(20),
+                                                padding: const EdgeInsets.all(20),
                                                 height: 500,
                                                 width: 500,
                                                 child: PointerInterceptor(
                                                   child: StatefulBuilder(
                                                     builder: (context, state) {
                                                       return GoogleMap(
-                                                          markers: Set.from(
-                                                              myMraker),
+                                                          markers: Set.from(myMraker),
                                                           onTap: (tappedPoint) {
                                                             myMraker = [];
                                                             myMraker.add(Marker(
                                                                 markerId: MarkerId(
-                                                                    tappedPoint
-                                                                        .toString()),
-                                                                position:
-                                                                    tappedPoint));
+                                                                    tappedPoint.toString()),
+                                                                position: tappedPoint));
                                                             locationText.text =
                                                                 "${tappedPoint.latitude},${tappedPoint.longitude}";
 
@@ -688,24 +641,16 @@ class _SetUpState extends State<SetUp> {
                                                             Get.back();
                                                           },
                                                           onMapCreated:
-                                                              (GoogleMapController
-                                                                  controller) {
-                                                            _controller
-                                                                .complete(
-                                                                    controller);
+                                                              (GoogleMapController controller) {
+                                                            _controller.complete(controller);
                                                           },
-                                                          myLocationEnabled:
-                                                              true,
-                                                          myLocationButtonEnabled:
-                                                              true,
-                                                          initialCameraPosition:
-                                                              CameraPosition(
-                                                                  zoom: 30,
-                                                                  target: LatLng(
-                                                                      locationData!
-                                                                          .latitude!,
-                                                                      locationData!
-                                                                          .longitude!)));
+                                                          myLocationEnabled: true,
+                                                          myLocationButtonEnabled: true,
+                                                          initialCameraPosition: CameraPosition(
+                                                              zoom: 30,
+                                                              target: LatLng(
+                                                                  locationData!.latitude!,
+                                                                  locationData!.longitude!)));
                                                     },
                                                   ),
                                                 ),
@@ -720,8 +665,7 @@ class _SetUpState extends State<SetUp> {
                                                   child: const CircleAvatar(
                                                     maxRadius: 15,
                                                     minRadius: 15,
-                                                    backgroundColor:
-                                                        Colors.black,
+                                                    backgroundColor: Colors.black,
                                                     child: Icon(
                                                       Icons.close,
                                                       size: 30,
@@ -736,8 +680,7 @@ class _SetUpState extends State<SetUp> {
                                       );
                                     });
                               } else {
-                                showSnackBar(
-                                    context, "Location still initializing");
+                                showSnackBar(context, "Location still initializing");
                               }
                             },
                             child: IgnorePointer(
@@ -755,8 +698,7 @@ class _SetUpState extends State<SetUp> {
                                   ),
                                   focusColor: Colors.white,
                                   labelText: "Location on Map",
-                                  labelStyle: TextStyle(
-                                      color: Colors.white, fontSize: 13),
+                                  labelStyle: TextStyle(color: Colors.white, fontSize: 13),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.white),
                                   ),
@@ -785,8 +727,7 @@ class _SetUpState extends State<SetUp> {
                               ),
                               focusColor: Colors.white,
                               labelText: "Address*",
-                              labelStyle:
-                                  TextStyle(color: Colors.white, fontSize: 13),
+                              labelStyle: TextStyle(color: Colors.white, fontSize: 13),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                               ),
@@ -845,30 +786,20 @@ class _SetUpState extends State<SetUp> {
                                           Icons.close,
                                         ),
                                       )),
-                                  const Text(
-                                      "Open  Time:- Your business open time",
+                                  const Text("Open  Time:- Your business open time",
                                       style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.white,
-                                          height: 1.7)),
-                                  const Text(
-                                      "Close Time:- Your business closing time",
+                                          fontSize: 12, color: Colors.white, height: 1.7)),
+                                  const Text("Close Time:- Your business closing time",
                                       style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.white,
-                                          height: 1.7)),
+                                          fontSize: 12, color: Colors.white, height: 1.7)),
                                   const Text(
                                       "Break Time:- Lunch/Break time if any in your business",
                                       style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.white,
-                                          height: 1.7)),
+                                          fontSize: 12, color: Colors.white, height: 1.7)),
                                   const Text(
                                       "Game  Length:- Time for 1 game (e.g 45 min or 90 min)",
                                       style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.white,
-                                          height: 1.7)),
+                                          fontSize: 12, color: Colors.white, height: 1.7)),
                                 ],
                               ),
                             ),
@@ -903,10 +834,8 @@ class _SetUpState extends State<SetUp> {
                                     borderSide: BorderSide(color: Colors.white),
                                   ),
                                   focusColor: Colors.white,
-                                  labelText:
-                                      "Indiviual Price (price for single player)",
-                                  labelStyle: TextStyle(
-                                      color: Colors.white, fontSize: 13),
+                                  labelText: "Indiviual Price (price for single player)",
+                                  labelStyle: TextStyle(color: Colors.white, fontSize: 13),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.white),
                                   ),
@@ -934,10 +863,8 @@ class _SetUpState extends State<SetUp> {
                                     borderSide: BorderSide(color: Colors.white),
                                   ),
                                   focusColor: Colors.white,
-                                  labelText:
-                                      "Team Price (price for team booking)",
-                                  labelStyle: TextStyle(
-                                      color: Colors.white, fontSize: 13),
+                                  labelText: "Team Price (price for team booking)",
+                                  labelStyle: TextStyle(color: Colors.white, fontSize: 13),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.white),
                                   ),
@@ -965,10 +892,8 @@ class _SetUpState extends State<SetUp> {
                                     borderSide: BorderSide(color: Colors.white),
                                   ),
                                   focusColor: Colors.white,
-                                  labelText:
-                                      "Field Booking Price (rate per hour)",
-                                  labelStyle: TextStyle(
-                                      color: Colors.white, fontSize: 13),
+                                  labelText: "Field Booking Price (rate per hour)",
+                                  labelStyle: TextStyle(color: Colors.white, fontSize: 13),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.white),
                                   ),
@@ -992,8 +917,7 @@ class _SetUpState extends State<SetUp> {
                             if (image != null)
                               Container(
                                 height: 200,
-                                child: Image.file(File(image!.path),
-                                    fit: BoxFit.cover),
+                                child: Image.file(File(image!.path), fit: BoxFit.cover),
                               ),
                             const SizedBox(
                               height: 20,
